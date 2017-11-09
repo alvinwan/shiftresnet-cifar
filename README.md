@@ -28,14 +28,14 @@ python main.py
 
 Below, we run experiments using ResNet101, varying expansion used for all conv-shift-conv layers in the neural network. Here, we consider 3x3 filters. `a` is the number of filters in the first set of 1x1 convolutional filters. `c` is the number of channels in our input. The original ResNet110 has accuracy ___.
 
-| Expansion | a | Acc |
-|-----------|---|-----
-| 1 | c | 
-| 2 | 2c |
-| 3 | 3c |
-| 4 | 4c |
-| 5 | 5c |
-| 6 | 6c |
+| Expansion | a | Acc | Reduction |
+|-----------|---|-----|-----------|
+| 1 | c | 87.91% |
+| 2 | 2c | 89.02% |
+| 3 | 3c | 89.75% |
+| 4 | 4c | 89.49% |
+| 5 | 5c | 90.37% |
+| 6 | 6c | 91.01% |
 | 7 | 7c |
 | 8 | 8c |
 | 9 | 9c |
