@@ -6,6 +6,22 @@ Train ResNet with shift operations on CIFAR10 using PyTorch. This uses the [orig
 - Training is fast, maybe even a little bit faster.
 - Very memory efficient!
 
+## Getting Started
+
+1. Clone the repository
+
+	git clone git@github.com:alvinwan/shiftresnet-cifar.git
+
+2. Compile the Shift Layer implementation in C.
+
+	cd shiftresnet-cifar/models/shiftnet_cuda_v2
+        make
+        cd ../../
+
+3. Run
+
+	python main.py
+
 ## Accuracy
 
 Below, we run experiments using ResNet101, varying expansion used for all conv-shift-conv layers in the neural network.
