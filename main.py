@@ -81,12 +81,14 @@ if use_cuda:
 criterion = nn.CrossEntropyLoss()
 
 def adjust_learning_rate(epoch, lr):
-    if epoch < 80:
+    if epoch <= 75:
       return lr
-    elif epoch < 120:
+    elif epoch <= 100:
       return lr/10
-    else:
+    elif epoch <= 130:
       return lr/100
+    else:
+      return lr/1000
 
 # Training
 def train(epoch):
