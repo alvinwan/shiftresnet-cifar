@@ -115,7 +115,7 @@ class ResNet(nn.Module):
         strides = [stride] + [1]*(num_blocks-1)
         layers = []
         for stride in strides:
-            layers.append(block(self.in_planes, planes, stride, expansion=expansion))
+            layers.append(block(self.in_planes, planes, stride, expansion=self.expansion))
             self.in_planes = planes
         return nn.Sequential(*layers)
 

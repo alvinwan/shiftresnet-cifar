@@ -52,8 +52,8 @@ testloader = torch.utils.data.DataLoader(testset, batch_size=1000, shuffle=False
 classes = ('plane', 'car', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck')
 
 all_models = {
-    'shiftresnet20': ShiftResNet20
-    'shiftresnet44': ShiftResNet44
+    'shiftresnet20': ShiftResNet20,
+    'shiftresnet44': ShiftResNet44,
     'shiftresnet110': ShiftResNet110
 }
 
