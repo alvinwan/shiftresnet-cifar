@@ -99,10 +99,10 @@ class Bottleneck(nn.Module):
         return out
 
 class ResNet(nn.Module):
-    def __init__(self, block, num_blocks, num_classes=10, expansion=1):
+    def __init__(self, block, num_blocks, num_classes=10, block_kwargs={}):
         super(ResNet, self).__init__()
         self.in_planes = 16
-        self.expansion = expansion
+        self.block_kwargs = block_kwargs
 
         self.conv1 = nn.Conv2d(3, 16, kernel_size=3, stride=1, padding=1, bias=False)
         self.bn1 = nn.BatchNorm2d(16)
@@ -115,7 +115,7 @@ class ResNet(nn.Module):
         strides = [stride] + [1]*(num_blocks-1)
         layers = []
         for stride in strides:
-            layers.append(block(self.in_planes, planes, stride, expansion=self.expansion))
+            layers.append(block(self.in_planes, planes, stride, **self.block_kwargs))
             self.in_planes = planes
         return nn.Sequential(*layers)
 

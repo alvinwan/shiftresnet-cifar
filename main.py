@@ -17,11 +17,18 @@ from utils import progress_bar
 from torch.autograd import Variable
 
 
+all_models = {
+    'shiftresnet20': ShiftResNet20,
+    'shiftresnet44': ShiftResNet44,
+    'resnet110': ResNet110,
+    'shiftresnet110': ShiftResNet110
+}
+
 parser = argparse.ArgumentParser(description='PyTorch CIFAR10 Training')
 parser.add_argument('--lr', default=0.1, type=float, help='learning rate')
 parser.add_argument('--resume', '-r', action='store_true', help='resume from checkpoint')
 parser.add_argument('--batch_size', '-b', default=128, type=int, help='batch size')
-parser.add_argument('--arch', '-a', choices=('shiftresnet110',), default='shiftresnet110', help='neural network architecture')
+parser.add_argument('--arch', '-a', choices=all_models.keys(), default='shiftresnet110', help='neural network architecture')
 parser.add_argument('--expansion', '-e', help='Expansion for shift resnet.', default=1, type=float)
 args = parser.parse_args()
 
@@ -50,12 +57,6 @@ testset = torchvision.datasets.CIFAR10(root='./data', train=False, download=True
 testloader = torch.utils.data.DataLoader(testset, batch_size=1000, shuffle=False, num_workers=2)
 
 classes = ('plane', 'car', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck')
-
-all_models = {
-    'shiftresnet20': ShiftResNet20,
-    'shiftresnet44': ShiftResNet44,
-    'shiftresnet110': ShiftResNet110
-}
 
 # Model
 if args.resume:
