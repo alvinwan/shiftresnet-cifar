@@ -10,38 +10,32 @@ Train ResNet with shift operations on CIFAR10 using PyTorch. This uses the [orig
 
 1. Clone the repository
 
-	git clone git@github.com:alvinwan/shiftresnet-cifar.git
+```
+git clone git@github.com:alvinwan/shiftresnet-cifar.git
+```
 
 2. Compile the Shift Layer implementation in C.
-
-	cd shiftresnet-cifar/models/shiftnet_cuda_v2
-        make
-        cd ../../
-
+```
+cd shiftresnet-cifar/models/shiftnet_cuda_v2
+make
+cd ../../
+```
 3. Run
-
-	python main.py
-
+```
+python main.py
+```
 ## Accuracy
 
-Below, we run experiments using ResNet101, varying expansion used for all conv-shift-conv layers in the neural network.
+Below, we run experiments using ResNet101, varying expansion used for all conv-shift-conv layers in the neural network. Here, we consider 3x3 filters. `a` is the number of filters in the first set of 1x1 convolutional filters. `c` is the number of channels in our input. The original ResNet110 has accuracy ___.
 
-| Expansion | Acc |
-|-----------|-----|
-| 1 | |
-| 2 | |
-| 3 | |
-| 4 | |
-| 5 | |
-| 6 | |
-| 7 | |
-| 8 | |
-| 9 | |
-
-## Learning rate adjustment
-I manually change the `lr` during training:
-- `0.1` for epoch `[0,150)`
-- `0.01` for epoch `[150,250)`
-- `0.001` for epoch `[250,350)`
-
-Resume the training with `python main.py --resume --lr=0.01`
+| Expansion | a | Acc |
+|-----------|---|-----
+| 1 | c | 
+| 2 | 2c |
+| 3 | 3c |
+| 4 | 4c |
+| 5 | 5c |
+| 6 | 6c |
+| 7 | 7c |
+| 8 | 8c |
+| 9 | 9c |
