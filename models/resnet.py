@@ -99,10 +99,9 @@ class Bottleneck(nn.Module):
         return out
 
 class ResNet(nn.Module):
-    def __init__(self, block, num_blocks, num_classes=10, block_kwargs={}):
+    def __init__(self, block, num_blocks, num_classes=10):
         super(ResNet, self).__init__()
         self.in_planes = 16
-        self.block_kwargs = block_kwargs
 
         self.conv1 = nn.Conv2d(3, 16, kernel_size=3, stride=1, padding=1, bias=False)
         self.bn1 = nn.BatchNorm2d(16)
@@ -115,7 +114,7 @@ class ResNet(nn.Module):
         strides = [stride] + [1]*(num_blocks-1)
         layers = []
         for stride in strides:
-            layers.append(block(self.in_planes, planes, stride, **self.block_kwargs))
+            layers.append(block(self.in_planes, planes, stride))
             self.in_planes = planes
         return nn.Sequential(*layers)
 
@@ -142,13 +141,21 @@ def ResNet110():
     return ResNet(BasicBlock, [18, 18, 18])
 
 def ShiftResNet20(expansion=1):
-    return ResNet(ShiftConv, [3, 3, 3], expansion=expansion)
+    block = lambda in_planes, out_planes, stride: \
+        ShiftConv(in_planes, out_planes, stride, expansion=expansion)
+    return ResNet(block, [3, 3, 3])
 
 def ShiftResNet32(expansion=1):
-    return ResNet(ShiftConv, [5, 5, 5], expansion=expansion)
+    block = lambda in_planes, out_planes, stride: \
+        ShiftConv(in_planes, out_planes, stride, expansion=expansion)
+    return ResNet(block, [5, 5, 5])
 
 def ShiftResNet44(expansion=1):
-    return ResNet(ShiftConv, [7 ,7, 7], expansion=expansion)
+    block = lambda in_planes, out_planes, stride: \
+        ShiftConv(in_planes, out_planes, stride, expansion=expansion)
+    return ResNet(block, [7, 7, 7])
 
 def ShiftResNet110(expansion=1):
-    return ResNet(ShiftConv, [18, 18, 18], expansion=expansion)
+    block = lambda in_planes, out_planes, stride: \
+        ShiftConv(in_planes, out_planes, stride, expansion=expansion)
+    return ResNet(block, [18, 18, 18])
