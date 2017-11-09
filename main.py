@@ -21,6 +21,8 @@ parser = argparse.ArgumentParser(description='PyTorch CIFAR10 Training')
 parser.add_argument('--lr', default=0.1, type=float, help='learning rate')
 parser.add_argument('--resume', '-r', action='store_true', help='resume from checkpoint')
 parser.add_argument('--batch_size', '-b', default=128, type=int, help='batch size')
+parser.add_argument('--arch', '-a', choices=('shiftresnet110',), default='shiftresnet110', help='neural network architecture')
+parser.add_argument('--expansion', '-e', help='Expansion for shift resnet.', default=1, type=float)
 args = parser.parse_args()
 
 use_cuda = torch.cuda.is_available()
@@ -49,27 +51,26 @@ testloader = torch.utils.data.DataLoader(testset, batch_size=1000, shuffle=False
 
 classes = ('plane', 'car', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck')
 
+all_models = {
+    'shiftresnet20': ShiftResNet20
+    'shiftresnet44': ShiftResNet44
+    'shiftresnet110': ShiftResNet110
+}
+
 # Model
 if args.resume:
     # Load checkpoint.
-    print('==> Resuming from checkpoint..')
+    path = './checkpoint/%s_%s.t7' % (args.arch, args.expansion)
+    print('==> Resuming from checkpoint.. %s' % path)
     assert os.path.isdir('checkpoint'), 'Error: no checkpoint directory found!'
-    checkpoint = torch.load('./checkpoint/ckpt.t18')
+    checkpoint = torch.load(path)
     net = checkpoint['net']
     best_acc = checkpoint['acc']
     start_epoch = checkpoint['epoch']
 else:
     print('==> Building model..')
-    # net = VGG('VGG19')
-    net = ShiftResNet44()
-    # net = PreActResNet18()
-    # net = GoogLeNet()
-    # net = DenseNet121()
-    # net = ResNeXt29_2x64d()
-    # net = MobileNet()
-    # net = DPN92()
-    # net = ShuffleNetG2()
-    # net = SENet18()
+    cls = all_models[args.arch]
+    net = cls(args.expansion) if 'shift' in args.arch else cls()
 
 if use_cuda:
     net.cuda()
@@ -146,7 +147,9 @@ def test(epoch):
         }
         if not os.path.isdir('checkpoint'):
             os.mkdir('checkpoint')
-        torch.save(state, './checkpoint/shift_44.t7')
+        path = './checkpoint/%s_%s.t7' % (args.arch, args.expansion)
+        torch.save(state, path)
+        print('* Saved checkpoint to %s' % path)
         best_acc = acc
 
 

@@ -15,8 +15,9 @@ from shiftnet_cuda_v2 import Shift3x3_cuda, GenericShift_cuda
 
 class ShiftConv(nn.Module):
     expansion=9
-    def __init__(self, in_planes, out_planes, stride=1):
+    def __init__(self, in_planes, out_planes, stride=1, expansion=1):
         super(ShiftConv, self).__init__()
+        self.expansion = expansion
         mid_planes = int(out_planes * self.expansion)
 
         self.conv1 = nn.Conv2d(
@@ -98,9 +99,10 @@ class Bottleneck(nn.Module):
         return out
 
 class ResNet(nn.Module):
-    def __init__(self, block, num_blocks, num_classes=10):
+    def __init__(self, block, num_blocks, num_classes=10, expansion=1):
         super(ResNet, self).__init__()
         self.in_planes = 16
+        self.expansion = expansion
 
         self.conv1 = nn.Conv2d(3, 16, kernel_size=3, stride=1, padding=1, bias=False)
         self.bn1 = nn.BatchNorm2d(16)
@@ -113,7 +115,7 @@ class ResNet(nn.Module):
         strides = [stride] + [1]*(num_blocks-1)
         layers = []
         for stride in strides:
-            layers.append(block(self.in_planes, planes, stride))
+            layers.append(block(self.in_planes, planes, stride, expansion=expansion))
             self.in_planes = planes
         return nn.Sequential(*layers)
 
@@ -139,14 +141,14 @@ def ResNet44():
 def ResNet110():
     return ResNet(BasicBlock, [18, 18, 18])
 
-def ShiftResNet20():
-    return ResNet(ShiftConv, [3, 3, 3])
+def ShiftResNet20(expansion=1):
+    return ResNet(ShiftConv, [3, 3, 3], expansion=expansion)
 
-def ShiftResNet32():
-    return ResNet(ShiftConv, [5, 5, 5])
+def ShiftResNet32(expansion=1):
+    return ResNet(ShiftConv, [5, 5, 5], expansion=expansion)
 
-def ShiftResNet44():
-    return ResNet(ShiftConv, [7 ,7, 7])
+def ShiftResNet44(expansion=1):
+    return ResNet(ShiftConv, [7 ,7, 7], expansion=expansion)
 
-def ShiftResNet110():
-    return ResNet(ShiftConv, [18, 18, 18])
+def ShiftResNet110(expansion=1):
+    return ResNet(ShiftConv, [18, 18, 18], expansion=expansion)
