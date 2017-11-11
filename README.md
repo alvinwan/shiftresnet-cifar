@@ -32,7 +32,7 @@ Below, we run experiments using ResNet110, varying expansion used for all conv-s
 
 | Model | Expansion | Acc | Parameters (millions) | Reduction |
 |-------|-----------|-----|-----------------------|-----------|
-| ResNet20 | c | (training) | 0.03 | 7.8 |
+| ResNet20 | c | 86.28% | 0.03 | 7.8 |
 | ResNet20 | 3c | 90.08% | 0.10 | 2.9 |
 | ResNet20 | 6c | 90.59% | 0.19 | 1.5 |
 | ResNet20 | 9c | 91.69% | 0.28 | 0.98 |
