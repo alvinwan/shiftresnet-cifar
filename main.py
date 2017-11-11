@@ -34,7 +34,7 @@ parser.add_argument('--resume', '-r', action='store_true', help='resume from che
 parser.add_argument('--batch_size', '-b', default=128, type=int, help='batch size')
 parser.add_argument('--arch', '-a', choices=all_models.keys(), default='shiftresnet110', help='neural network architecture')
 parser.add_argument('--expansion', '-e', help='Expansion for shift resnet.', default=1, type=float)
-parser.add_argument('--reduction', '-r', help='Amount to reduce raw resnet model by', default=1.0, type=float)
+parser.add_argument('--reduction', help='Amount to reduce raw resnet model by', default=1.0, type=float)
 args = parser.parse_args()
 
 use_cuda = torch.cuda.is_available()
@@ -63,10 +63,16 @@ testloader = torch.utils.data.DataLoader(testset, batch_size=1000, shuffle=False
 
 classes = ('plane', 'car', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck')
 
+if 'shift' in args.arch:
+    path = './checkpoint/%s_%s.t7' % (args.arch, args.expansion)
+elif args.reduction > 1:
+    path = './checkpoint/%s_red_%s.t7' % (args.arch, args.reduction)
+else:
+    path = './checkpoint/%s.t7' % args.arch
+
 # Model
 if args.resume:
     # Load checkpoint.
-    path = './checkpoint/%s_%s.t7' % (args.arch, args.expansion)
     print('==> Resuming from checkpoint.. %s' % path)
     assert os.path.isdir('checkpoint'), 'Error: no checkpoint directory found!'
     checkpoint = torch.load(path)
@@ -158,7 +164,6 @@ def test(epoch):
         }
         if not os.path.isdir('checkpoint'):
             os.mkdir('checkpoint')
-        path = './checkpoint/%s_%s.t7' % (args.arch, args.expansion)
         torch.save(state, path)
         print('* Saved checkpoint to %s' % path)
         best_acc = acc

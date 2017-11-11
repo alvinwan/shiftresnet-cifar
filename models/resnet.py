@@ -61,8 +61,8 @@ class BasicBlock(nn.Module):
         self.shortcut = nn.Sequential()
         if stride != 1 or in_planes != dim:
             self.shortcut = nn.Sequential(
-                nn.Conv2d(in_planes, dim, kernel_size=1, stride=stride, bias=False),
-                nn.BatchNorm2d(dim)
+                nn.Conv2d(in_planes, planes, kernel_size=1, stride=stride, bias=False),
+                nn.BatchNorm2d(planes)
             )
 
     def forward(self, x):
