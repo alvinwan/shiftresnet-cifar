@@ -32,21 +32,21 @@ Below, we run experiments using ResNet110, varying expansion used for all conv-s
 
 | Model | Expansion | Acc | Parameters (millions) | Reduction |
 |-------|-----------|-----|-----------------------|-----------|
-| ResNet20 | c | ? | 0.03 | 7.8 |
+| ResNet20 | c | (training) | 0.03 | 7.8 |
 | ResNet20 | 3c | 90.08% | 0.10 | 2.9 |
 | ResNet20 | 6c | 90.59% | 0.19 | 1.5 |
 | ResNet20 | 9c | 91.69% | 0.28 | 0.98 |
 | ResNet20 | original | 92.35% | 0.27 | 1.0 |
-| ResNet56 | c | ? | 0.10 | 8.4 |
-| ResNet56 | 3c | ? | 0.29 | 2.9 |
-| ResNet56 | 6c | ? | 0.58 | 1.5 |
-| ResNet56 | 9c | ? | 0.87 | 0.98 |
-| ResNet56 | original | ? | 0.86 | 1.0 |
+| ResNet56 | c | (training) | 0.10 | 8.4 |
+| ResNet56 | 3c | (training) | 0.29 | 2.9 |
+| ResNet56 | 6c | (training) | 0.58 | 1.5 |
+| ResNet56 | 9c | (training) | 0.87 | 0.98 |
+| ResNet56 | original | (training) | 0.86 | 1.0 |
 | ResNet110 | 1c | 90.34% | 0.20 | 8.5 |
 | ResNet110 | 3c | 91.98% | 0.59 | 2.9 |
-| ResNet110 | 6c | 91.31% | 1.18 | 1.5 |
-| ResNet110 | 9c | 93.25% | 1.76 | 0.98 |
-| ResNet110 | original | | |
+| ResNet110 | 6c | 92.46% | 1.18 | 1.5 |
+| ResNet110 | 9c | (training) | 1.76 | 0.98 |
+| ResNet110 | original | 93.70% | 1.73 | 1.0 |
 
 <!--| ResNet110 | 2c | 91.84% | 0.40 | 4.4 |
 | ResNet110 | 4c | 91.93% |  0.79 | 2.2 |
