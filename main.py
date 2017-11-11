@@ -34,6 +34,7 @@ parser.add_argument('--resume', '-r', action='store_true', help='resume from che
 parser.add_argument('--batch_size', '-b', default=128, type=int, help='batch size')
 parser.add_argument('--arch', '-a', choices=all_models.keys(), default='shiftresnet110', help='neural network architecture')
 parser.add_argument('--expansion', '-e', help='Expansion for shift resnet.', default=1, type=float)
+parser.add_argument('--reduction', '-r', help='Amount to reduce raw resnet model by', default=1.0, type=float)
 args = parser.parse_args()
 
 use_cuda = torch.cuda.is_available()
@@ -75,7 +76,12 @@ if args.resume:
 else:
     print('==> Building model..')
     cls = all_models[args.arch]
-    net = cls(args.expansion) if 'shift' in args.arch else cls()
+    assert 'shift' not in args.arch or args.reduction == 1, \
+        'Only default resnet supports reductions'
+    if args.reduction != 1:
+        net = cls(reduction=args.reduction)
+    else:
+        net = cls(args.expansion) if 'shift' in args.arch else cls()
 
 if use_cuda:
     net.cuda()

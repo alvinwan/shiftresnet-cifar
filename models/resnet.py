@@ -49,18 +49,20 @@ class ShiftConv(nn.Module):
 class BasicBlock(nn.Module):
     expansion = 1
 
-    def __init__(self, in_planes, planes, stride=1):
+    def __init__(self, in_planes, planes, stride=1, reduction=1):
         super(BasicBlock, self).__init__()
-        self.conv1 = nn.Conv2d(in_planes, planes, kernel_size=3, stride=stride, padding=1, bias=False)
-        self.bn1 = nn.BatchNorm2d(planes)
-        self.conv2 = nn.Conv2d(planes, planes, kernel_size=3, stride=1, padding=1, bias=False)
+        self.expansion = 1 / reduction
+        dim = int(self.expansion * planes)
+        self.conv1 = nn.Conv2d(in_planes, dim, kernel_size=3, stride=stride, padding=1, bias=False)
+        self.bn1 = nn.BatchNorm2d(dim)
+        self.conv2 = nn.Conv2d(dim, planes, kernel_size=3, stride=1, padding=1, bias=False)
         self.bn2 = nn.BatchNorm2d(planes)
 
         self.shortcut = nn.Sequential()
-        if stride != 1 or in_planes != self.expansion*planes:
+        if stride != 1 or in_planes != dim:
             self.shortcut = nn.Sequential(
-                nn.Conv2d(in_planes, self.expansion*planes, kernel_size=1, stride=stride, bias=False),
-                nn.BatchNorm2d(self.expansion*planes)
+                nn.Conv2d(in_planes, dim, kernel_size=1, stride=stride, bias=False),
+                nn.BatchNorm2d(dim)
             )
 
     def forward(self, x):
@@ -101,20 +103,30 @@ class ResNet(nn.Module):
         out = self.linear(out)
         return out
 
-def ResNet20():
-    return ResNet(BasicBlock, [3, 3, 3])
+def ResNet20(reduction=1):
+    block = lambda in_planes, planes, stride: \
+        BasicBlock(in_planes, planes, stride, reduction=reduction)
+    return ResNet(block, [3, 3, 3])
 
-def ResNet32():
-    return ResNet(BasicBlock, [5, 5, 5])
+def ResNet32(reduction=1):
+    block = lambda in_planes, planes, stride: \
+        BasicBlock(in_planes, planes, stride, reduction=reduction)
+    return ResNet(block, [5, 5, 5])
 
-def ResNet44():
-    return ResNet(BasicBlock, [7 ,7, 7])
+def ResNet44(reduction=1):
+    block = lambda in_planes, planes, stride: \
+        BasicBlock(in_planes, planes, stride, reduction=reduction)
+    return ResNet(block, [7 ,7, 7])
 
-def ResNet56():
-    return ResNet(BasicBlock, [9, 9, 9])
+def ResNet56(reduction=1):
+    block = lambda in_planes, planes, stride: \
+        BasicBlock(in_planes, planes, stride, reduction=reduction)
+    return ResNet(block, [9, 9, 9])
 
-def ResNet110():
-    return ResNet(BasicBlock, [18, 18, 18])
+def ResNet110(reduction=1):
+    block = lambda in_planes, planes, stride: \
+        BasicBlock(in_planes, planes, stride, reduction=reduction)
+    return ResNet(block, [18, 18, 18])
 
 def ShiftResNet20(expansion=1):
     block = lambda in_planes, out_planes, stride: \
