@@ -83,8 +83,8 @@ Accuracies below are all Top 1. All CIFAR-100 pretrained models can be found on 
 | ResNet56 | 6c | ? | ? | 0.58 | 1.5 | 1.6 |
 | ResNet56 | 9c | ? | ? | 0.87 | 0.98 (0.95) | 0.98 |
 | ResNet56 | original | - | 69.27% | 0.86 | 1.0 | - |
-| ResNet110 | c | ? | (bl) | 0.20 | 8.5 (8.2) | 15 |
-| ResNet110 | 3c | ? | (bl) | 0.59 | 2.9 | 3.3 |
-| ResNet110 | 6c | ? | (a20) | 1.18 | 1.5 | 1.6 |
-| ResNet110 | 9c | ? | (a19) | 1.76 | 0.98 (0.95) | 0.98 |
+| ResNet110 | c | (bl) | ? | 0.20 | 8.5 (8.2) | 15 |
+| ResNet110 | 3c | (bl) | ? | 0.59 | 2.9 | 3.3 |
+| ResNet110 | 6c | (a20) | ? | 1.18 | 1.5 | 1.6 |
+| ResNet110 | 9c | (a19) | ? | 1.76 | 0.98 (0.95) | 0.98 |
 | ResNet110 | original | - | 72.11% | 1.73 | 1.0 | - |
