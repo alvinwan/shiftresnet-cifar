@@ -23,6 +23,7 @@ from torch.autograd import Variable
 parser = argparse.ArgumentParser(description='PyTorch CIFAR10 Training')
 parser.add_argument('--model', action='append', help='Specify model to test')
 parser.add_argument('--suppress-errors', action='store_true')
+parser.add_argument('--dataset', choices=('cifar10', 'cifar100'), help='Dataset to train and validate on.')
 args = parser.parse_args()
 
 use_cuda = torch.cuda.is_available()
@@ -34,10 +35,12 @@ transform_test = transforms.Compose([
     transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
 ])
 
-testset = torchvision.datasets.CIFAR10(root='./data', train=False, download=True, transform=transform_test)
-testloader = torch.utils.data.DataLoader(testset, batch_size=512, shuffle=False, num_workers=4)
+if args.dataset == 'cifar10':
+    testset = torchvision.datasets.CIFAR10(root='./data', train=False, download=True, transform=transform_test)
+elif args.dataset == 'cifar100':
+    testset = torchvision.datasets.CIFAR100(root='./data', train=False, download=True, transform=transform_test)
 
-classes = ('plane', 'car', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck')
+testloader = torch.utils.data.DataLoader(testset, batch_size=512, shuffle=False, num_workers=4)
 
 criterion = nn.CrossEntropyLoss()
 

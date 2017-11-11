@@ -35,6 +35,7 @@ parser.add_argument('--batch_size', '-b', default=128, type=int, help='batch siz
 parser.add_argument('--arch', '-a', choices=all_models.keys(), default='shiftresnet110', help='neural network architecture')
 parser.add_argument('--expansion', '-e', help='Expansion for shift resnet.', default=1, type=float)
 parser.add_argument('--reduction', help='Amount to reduce raw resnet model by', default=1.0, type=float)
+parser.add_argument('--dataset', choices=('cifar10', 'cifar100'), help='Dataset to train and validate on.')
 args = parser.parse_args()
 
 use_cuda = torch.cuda.is_available()
@@ -55,20 +56,31 @@ transform_test = transforms.Compose([
     transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
 ])
 
-trainset = torchvision.datasets.CIFAR10(root='./data', train=True, download=True, transform=transform_train)
-trainloader = torch.utils.data.DataLoader(trainset, batch_size=args.batch_size, shuffle=True, num_workers=2)
+if args.dataset == 'cifar10':
+    trainset = torchvision.datasets.CIFAR10(root='./data', train=True, download=True, transform=transform_train)
+    testset = torchvision.datasets.CIFAR10(root='./data', train=False, download=True, transform=transform_test)
+    num_classes=10
+elif args.dataset == 'cifar100':
+    trainset = torchvision.datasets.CIFAR100(root='./data', train=True, download=True, transform=transform_train)
+    testset = torchvision.datasets.CIFAR100(root='./data', train=False, download=True, transform=transform_test)
+    num_classes = 100
 
-testset = torchvision.datasets.CIFAR10(root='./data', train=False, download=True, transform=transform_test)
+trainloader = torch.utils.data.DataLoader(trainset, batch_size=args.batch_size, shuffle=True, num_workers=2)
 testloader = torch.utils.data.DataLoader(testset, batch_size=1000, shuffle=False, num_workers=2)
 
-classes = ('plane', 'car', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck')
 
 if 'shift' in args.arch:
-    path = './checkpoint/%s_%s.t7' % (args.arch, args.expansion)
+    suffix = '_%s' % args.expansion
 elif args.reduction > 1:
-    path = './checkpoint/%s_red_%s.t7' % (args.arch, args.reduction)
+    suffix = '_%s' % args.reduction
 else:
-    path = './checkpoint/%s.t7' % args.arch
+    suffix = ''
+
+if args.dataset == 'cifar100':
+    suffix += '_cifar100'
+
+path = './checkpoint/%s%s.t7' % (args.arch, suffix)
+
 
 # Model
 if args.resume:
@@ -85,9 +97,9 @@ else:
     assert 'shift' not in args.arch or args.reduction == 1, \
         'Only default resnet supports reductions'
     if args.reduction != 1:
-        net = cls(reduction=args.reduction)
+        net = cls(reduction=args.reduction, num_classes=num_classes)
     else:
-        net = cls(args.expansion) if 'shift' in args.arch else cls()
+        net = cls(args.expansion, num_classes=num_classes) if 'shift' in args.arch else cls(num_classes=num_classes)
 
 if use_cuda:
     net.cuda()

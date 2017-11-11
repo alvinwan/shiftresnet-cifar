@@ -103,52 +103,52 @@ class ResNet(nn.Module):
         out = self.linear(out)
         return out
 
-def ResNet20(reduction=1):
+def ResNet20(reduction=1, num_classes=10):
     block = lambda in_planes, planes, stride: \
         BasicBlock(in_planes, planes, stride, reduction=reduction)
-    return ResNet(block, [3, 3, 3])
+    return ResNet(block, [3, 3, 3], num_classes=num_classes)
 
-def ResNet32(reduction=1):
+def ResNet32(reduction=1, num_classes=10):
     block = lambda in_planes, planes, stride: \
         BasicBlock(in_planes, planes, stride, reduction=reduction)
-    return ResNet(block, [5, 5, 5])
+    return ResNet(block, [5, 5, 5], num_classes=num_classes)
 
-def ResNet44(reduction=1):
+def ResNet44(reduction=1, num_classes=10):
     block = lambda in_planes, planes, stride: \
         BasicBlock(in_planes, planes, stride, reduction=reduction)
-    return ResNet(block, [7 ,7, 7])
+    return ResNet(block, [7 ,7, 7], num_classes=num_classes)
 
-def ResNet56(reduction=1):
+def ResNet56(reduction=1, num_classes=10):
     block = lambda in_planes, planes, stride: \
         BasicBlock(in_planes, planes, stride, reduction=reduction)
-    return ResNet(block, [9, 9, 9])
+    return ResNet(block, [9, 9, 9], num_classes=num_classes)
 
-def ResNet110(reduction=1):
+def ResNet110(reduction=1, num_classes=10):
     block = lambda in_planes, planes, stride: \
         BasicBlock(in_planes, planes, stride, reduction=reduction)
-    return ResNet(block, [18, 18, 18])
+    return ResNet(block, [18, 18, 18], num_classes=num_classes)
 
-def ShiftResNet20(expansion=1):
+def ShiftResNet20(expansion=1, num_classes=10):
     block = lambda in_planes, out_planes, stride: \
         ShiftConv(in_planes, out_planes, stride, expansion=expansion)
-    return ResNet(block, [3, 3, 3])
+    return ResNet(block, [3, 3, 3], num_classes=num_classes)
 
-def ShiftResNet32(expansion=1):
+def ShiftResNet32(expansion=1, num_classes=10):
     block = lambda in_planes, out_planes, stride: \
         ShiftConv(in_planes, out_planes, stride, expansion=expansion)
-    return ResNet(block, [5, 5, 5])
+    return ResNet(block, [5, 5, 5], num_classes=num_classes)
 
-def ShiftResNet44(expansion=1):
+def ShiftResNet44(expansion=1, num_classes=10):
     block = lambda in_planes, out_planes, stride: \
         ShiftConv(in_planes, out_planes, stride, expansion=expansion)
-    return ResNet(block, [7, 7, 7])
+    return ResNet(block, [7, 7, 7], num_classes=num_classes)
 
-def ShiftResNet56(expansion=1):
+def ShiftResNet56(expansion=1, num_classes=10):
     block = lambda in_planes, out_planes, stride: \
         ShiftConv(in_planes, out_planes, stride, expansion=expansion)
-    return ResNet(block, [9, 9, 9])
+    return ResNet(block, [9, 9, 9], num_classes=num_classes)
 
-def ShiftResNet110(expansion=1):
+def ShiftResNet110(expansion=1, num_classes=10):
     block = lambda in_planes, out_planes, stride: \
         ShiftConv(in_planes, out_planes, stride, expansion=expansion)
-    return ResNet(block, [18, 18, 18])
+    return ResNet(block, [18, 18, 18], num_classes=num_classes)
