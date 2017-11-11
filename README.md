@@ -30,14 +30,25 @@ python main.py
 
 Below, we run experiments using ResNet110, varying expansion used for all conv-shift-conv layers in the neural network. Here, we consider 3x3 filters. `a` is the number of filters in the first set of 1x1 convolutional filters. `c` is the number of channels in our input. For comparison, our retrained ResNet110 has accuracy 91.14% and 1.73m parameters.
 
-| Expansion | Acc | Parameters (millions) | Reduction |
-|-----------|-----|-----------------------|-----------|
-| 1c | 90.34% | 0.20 | 8.5 |
-| 2c | 91.84% | 0.40 | 4.4 |
-| 3c | |  0.59 | 2.9 |
-| 4c | 91.93% |  0.79 | 2.2 |
-| 5c | 91.77% |  0.98 | 1.8 |
-| 6c | |  1.18 | 1.5 |
-| 7c | 92.23% |  1.37 | 1.3 |
-| 8c | |  1.57 | 1.1 |
-| 9c | |  1.76 | 0.98 |
+| Model | Expansion | Acc | Parameters (millions) | Reduction |
+|-------|-----------|-----|-----------------------|-----------|
+| ResNet20 | c | ? | 0.03 | 7.8 |
+| ResNet20 | 3c | 90.08% | 0.10 | 2.9 |
+| ResNet20 | 6c | 90.59% | 0.19 | 1.5 |
+| ResNet20 | 9c | 91.69% | 0.28 | 0.98 |
+| ResNet20 | original | 92.35% | 0.27 | 1.0 |
+| ResNet56 | c | ? | 0.10 | 8.4 |
+| ResNet56 | 3c | ? | 0.29 | 2.9 |
+| ResNet56 | 6c | ? | 0.58 | 1.5 |
+| ResNet56 | 9c | ? | 0.87 | 0.98 |
+| ResNet56 | original | ? | 0.86 | 1.0 |
+| ResNet110 | 1c | 90.34% | 0.20 | 8.5 |
+| ResNet110 | 3c | 91.98% | 0.59 | 2.9 |
+| ResNet110 | 6c | 91.31% | 1.18 | 1.5 |
+| ResNet110 | 9c | 93.25% | 1.76 | 0.98 |
+| ResNet110 | original | | |
+
+<!--| ResNet110 | 2c | 91.84% | 0.40 | 4.4 |
+| ResNet110 | 4c | 91.93% |  0.79 | 2.2 |
+| ResNet110 | 5c | 91.77% |  0.98 | 1.8 |
+| ResNet110 | 7c | 92.23% |  1.37 | 1.3 |-->
