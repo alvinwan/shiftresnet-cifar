@@ -137,6 +137,9 @@ def ResNet32():
 def ResNet44():
     return ResNet(BasicBlock, [7 ,7, 7])
 
+def ResNet56():
+    return ResNet(BasicBlock, [9, 9, 9])
+
 def ResNet110():
     return ResNet(BasicBlock, [18, 18, 18])
 
@@ -154,6 +157,11 @@ def ShiftResNet44(expansion=1):
     block = lambda in_planes, out_planes, stride: \
         ShiftConv(in_planes, out_planes, stride, expansion=expansion)
     return ResNet(block, [7, 7, 7])
+
+def ShiftResNet56(expansion=1):
+    block = lambda in_planes, out_planes, stride: \
+        ShiftConv(in_planes, out_planes, stride, expansion=expansion)
+    return ResNet(block, [9, 9, 9])
 
 def ShiftResNet110(expansion=1):
     block = lambda in_planes, out_planes, stride: \

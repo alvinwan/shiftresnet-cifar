@@ -2,6 +2,8 @@ from models import ResNet20
 from models import ShiftResNet20
 from models import ResNet44
 from models import ShiftResNet44
+from models import ResNet56
+from models import ShiftResNet56
 from models import ResNet110
 from models import ShiftResNet110
 import numpy as np
@@ -12,6 +14,8 @@ all_models = {
     'shiftresnet20': ShiftResNet20,
     'resnet44': ResNet44,
     'shiftresnet44': ShiftResNet44,
+    'resnet56': ResNet56,
+    'shiftresnet56': ShiftResNet56,
     'resnet110': ResNet110,
     'shiftresnet110': ShiftResNet110
 }

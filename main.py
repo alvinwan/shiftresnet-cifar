@@ -18,8 +18,12 @@ from torch.autograd import Variable
 
 
 all_models = {
+    'resnet20': ResNet20,
     'shiftresnet20': ShiftResNet20,
+    'resnet44': ResNet44,
     'shiftresnet44': ShiftResNet44,
+    'resnet56': ResNet56,
+    'shiftresnet56': ShiftResNet56,
     'resnet110': ResNet110,
     'shiftresnet110': ShiftResNet110
 }
