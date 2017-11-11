@@ -6,8 +6,6 @@ Train ResNet with shift operations on CIFAR10 using PyTorch. This uses the [orig
 - Training is fast, maybe even a little bit faster.
 - Very memory efficient!
 
-All pretrained models can be found on [Google Drive](https://drive.google.com/drive/u/1/folders/1SNKb2vJ7laHo0o40n0-OOUjc0kL6b7Yw).
-
 ## Getting Started
 
 1. Clone the repository
@@ -36,6 +34,8 @@ Below, we run experiments on the following:
 
 `a` is the number of filters in the first set of 1x1 convolutional filters. `c` is the number of channels in our input.=
 
+All CIFAR-10 pretrained models can be found on [Google Drive](https://drive.google.com/drive/u/1/folders/1rD_b5epthHIDqYSERuwx4gVGcpMcomy7).
+
 ### CIFAR-10 Accuracy
 
 | Model | `a` | Acc | Acc (res) | Params* | Reduction** | `r`*** |
@@ -53,8 +53,8 @@ Below, we run experiments on the following:
 | ResNet110 | c | 90.34% | 76.82% | 0.20 | 8.5 (8.2) | 15 |
 | ResNet110 | 3c | 91.98% | 74.30% | 0.59 | 2.9 | 3.3 |
 | ResNet110 | 6c | 93.17% | 79.02% | 1.18 | 1.5 | 1.6 |
-| ResNet110 | 9c | 92.57% | 92.15% (f7) | 1.76 | 0.98 (0.95) | 0.98 |
-| ResNet110 | original | - | 93.70% | 1.73 | 1.0 | - |
+| ResNet110 | 9c | 92.57% | 92.46% | 1.76 | 0.98 (0.95) | 0.98 |
+| ResNet110 | original | - | 92.46% | 1.73 | 1.0 | - |
 
 `*` parameters are in the millions
 
@@ -69,20 +69,22 @@ Below, we run experiments on the following:
 
 ### CIFAR-100 Accuracy
 
+Accuracies below are all Top 1. All CIFAR-100 pretrained models can be found on [Google Drive](https://drive.google.com/drive/u/1/folders/1unOPMsQDagcDa8gI5kFvQ0VH84N7h1V2).
+
 | Model | `a` | Acc | Acc (res) | Params* | Reduction** | `r`*** |
 |-------|-----|-----|-----------|---------|-------------|--------|
 | ResNet20 | c | ? | ? | 0.03 | 7.8 (7.6) | 12 |
 | ResNet20 | 3c | ? | ? | 0.10 | 2.9 | 3.3 |
 | ResNet20 | 6c | ? | ? | 0.19 | 1.5 | 1.6 |
 | ResNet20 | 9c | ? | ? | 0.28 | .98 (1) | 1 |
-| ResNet20 | original | - | ? | 0.27 | 1.0 | - |
+| ResNet20 | original | - | 66.25% | 0.27 | 1.0 | - |
 | ResNet56 | c | ? | ? | 0.10 | 8.4 (8.2) | 16 |
 | ResNet56 | 3c | ? | ? | 0.29 | 2.9 | 3.3 |
 | ResNet56 | 6c | ? | ? | 0.58 | 1.5 | 1.6 |
 | ResNet56 | 9c | ? | ? | 0.87 | 0.98 (0.95) | 0.98 |
-| ResNet56 | original | - | ? | 0.86 | 1.0 | - |
-| ResNet110 | c | ? | ? | 0.20 | 8.5 (8.2) | 15 |
-| ResNet110 | 3c | ? | ? | 0.59 | 2.9 | 3.3 |
-| ResNet110 | 6c | ? | ? | 1.18 | 1.5 | 1.6 |
-| ResNet110 | 9c | ? | ? | 1.76 | 0.98 (0.95) | 0.98 |
-| ResNet110 | original | - | ? | 1.73 | 1.0 | - |
+| ResNet56 | original | - | 69.27% | 0.86 | 1.0 | - |
+| ResNet110 | c | ? | (bl) | 0.20 | 8.5 (8.2) | 15 |
+| ResNet110 | 3c | ? | (bl) | 0.59 | 2.9 | 3.3 |
+| ResNet110 | 6c | ? | (a20) | 1.18 | 1.5 | 1.6 |
+| ResNet110 | 9c | ? | (a19) | 1.76 | 0.98 (0.95) | 0.98 |
+| ResNet110 | original | - | 72.11% | 1.73 | 1.0 | - |
