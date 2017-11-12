@@ -35,7 +35,7 @@ parser.add_argument('--batch_size', '-b', default=128, type=int, help='batch siz
 parser.add_argument('--arch', '-a', choices=all_models.keys(), default='shiftresnet110', help='neural network architecture')
 parser.add_argument('--expansion', '-e', help='Expansion for shift resnet.', default=1, type=float)
 parser.add_argument('--reduction', help='Amount to reduce raw resnet model by', default=1.0, type=float)
-parser.add_argument('--dataset', choices=('cifar10', 'cifar100'), help='Dataset to train and validate on.')
+parser.add_argument('--dataset', choices=('cifar10', 'cifar100'), help='Dataset to train and validate on.', default='cifar10')
 args = parser.parse_args()
 
 use_cuda = torch.cuda.is_available()
@@ -80,7 +80,7 @@ if args.dataset == 'cifar100':
     suffix += '_cifar100'
 
 path = './checkpoint/%s%s.t7' % (args.arch, suffix)
-
+print('Using path: %s' % path)
 
 # Model
 if args.resume:

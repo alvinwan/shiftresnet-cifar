@@ -23,7 +23,7 @@ from torch.autograd import Variable
 parser = argparse.ArgumentParser(description='PyTorch CIFAR10 Training')
 parser.add_argument('--model', action='append', help='Specify model to test')
 parser.add_argument('--suppress-errors', action='store_true')
-parser.add_argument('--dataset', choices=('cifar10', 'cifar100'), help='Dataset to train and validate on.')
+parser.add_argument('--dataset', choices=('cifar10', 'cifar100'), help='Dataset to train and validate on.', default='cifar10')
 args = parser.parse_args()
 
 use_cuda = torch.cuda.is_available()
