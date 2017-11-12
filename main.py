@@ -95,7 +95,7 @@ testloader = torch.utils.data.DataLoader(testset, batch_size=1000, shuffle=False
 if 'shift' in args.arch:
     suffix = '_%s' % args.expansion
 elif args.reduction != 1:
-    suffix = '_%s' % args.reduction
+    suffix = '_%s_%s' % (args.reduction, args.reduction_mode)
 else:
     suffix = ''
 

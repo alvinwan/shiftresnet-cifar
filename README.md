@@ -30,7 +30,7 @@ python main.py
 Below, we run experiments on the following:
 
 1. Varying expansion used for all conv-shift-conv layers in the neural network. Here, we replace 3x3 filters.
-2. Varying number of output channels for a 3x3 convolution filter, matching the reduction in parameters that shift provides.
+2. Varying number of output channels for a 3x3 convolution filter, matching the reduction in parameters that shift provides. This is `--reduction-mode=block`, which is *not* the default reduction mode.
 
 `a` is the number of filters in the first set of 1x1 convolutional filters. `c` is the number of channels in our input.=
 
@@ -60,7 +60,7 @@ All CIFAR-10 pretrained models can be found on [Google Drive](https://drive.goog
 
 `**` The number in parantheses is the reduction in parameters we used for ResNet, if we could not obtain the exact reduction in parameters used for shift.
 
-`***` Value that you pass to `main.py` for the `--reduction` flag, to reproduce the provided accuracies. This represents the amount to reduce each resnet block's number of "internal convolutional channels" by. In constrast, the column to the left of it is the total neural network's reduction in parameters.
+`***` If using `--reduction_mode=block`, this is the value that you pass to `main.py` for the `--reduction` flag, to reproduce the provided accuracies. This represents the amount to reduce each resnet block's number of "internal convolutional channels" by. In constrast, the column to the left of it is the total neural network's reduction in parameters.
 
 <!--| ResNet110 | 2c | 91.84% | 0.40 | 4.4 |
 | ResNet110 | 4c | 91.93% |  0.79 | 2.2 |
