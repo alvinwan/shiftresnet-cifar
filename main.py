@@ -35,7 +35,8 @@ parser.add_argument('--batch_size', '-b', default=128, type=int, help='batch siz
 parser.add_argument('--arch', '-a', choices=all_models.keys(), default='shiftresnet110', help='neural network architecture')
 parser.add_argument('--expansion', '-e', help='Expansion for shift resnet.', default=1, type=float)
 parser.add_argument('--reduction', help='Amount to reduce raw resnet model by', default=1.0, type=float)
-parser.add_argument('--dataset', choices=('cifar10', 'cifar100'), help='Dataset to train and validate on.', default='cifar10')
+parser.add_argument('--dataset', choices=('cifar10', 'cifar100', 'imagenet'), help='Dataset to train and validate on.', default='cifar10')
+parser.add_argument('--datadir', help='Folder containing data', default='./data/')
 args = parser.parse_args()
 
 use_cuda = torch.cuda.is_available()
@@ -64,6 +65,27 @@ elif args.dataset == 'cifar100':
     trainset = torchvision.datasets.CIFAR100(root='./data', train=True, download=True, transform=transform_train)
     testset = torchvision.datasets.CIFAR100(root='./data', train=False, download=True, transform=transform_test)
     num_classes = 100
+elif args.dataset == 'imagenet':
+    raise NotImplementedError()
+    transform_train = transforms.Compose([
+        transforms.RandomSizedCrop(224),
+        transforms.RandomHorizontalFlip(),
+        transforms.ToTensor(),
+        transforms.Normalize(mean = [ 0.485, 0.456, 0.406 ],
+                             std = [ 0.229, 0.224, 0.225 ]),
+    ])
+
+    transform_test = transforms.Compose([
+        transforms.ToTensor(),
+        transforms.Normalize(mean = [ 0.485, 0.456, 0.406 ],
+                             std = [ 0.229, 0.224, 0.225 ]),
+    ])
+
+    traindir = os.path.join(args.datadir, 'train')
+    valdir = os.path.join(args.datadir, 'val')
+    trainset = torchvision.datasets.ImageFolder(traindir, transform_train)
+    testset = torchvision.datasets.ImageFolder(valdir, transform_test)
+    num_classes = 1000
 
 trainloader = torch.utils.data.DataLoader(trainset, batch_size=args.batch_size, shuffle=True, num_workers=2)
 testloader = torch.utils.data.DataLoader(testset, batch_size=1000, shuffle=False, num_workers=2)
@@ -71,13 +93,16 @@ testloader = torch.utils.data.DataLoader(testset, batch_size=1000, shuffle=False
 
 if 'shift' in args.arch:
     suffix = '_%s' % args.expansion
-elif args.reduction > 1:
+elif args.reduction != 1:
     suffix = '_%s' % args.reduction
 else:
     suffix = ''
 
 if args.dataset == 'cifar100':
     suffix += '_cifar100'
+
+if args.dataset == 'imagenet':
+    suffix += '_imagenet'
 
 path = './checkpoint/%s%s.t7' % (args.arch, suffix)
 print('Using path: %s' % path)
