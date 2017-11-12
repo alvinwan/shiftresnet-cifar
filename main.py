@@ -35,6 +35,7 @@ parser.add_argument('--batch_size', '-b', default=128, type=int, help='batch siz
 parser.add_argument('--arch', '-a', choices=all_models.keys(), default='shiftresnet110', help='neural network architecture')
 parser.add_argument('--expansion', '-e', help='Expansion for shift resnet.', default=1, type=float)
 parser.add_argument('--reduction', help='Amount to reduce raw resnet model by', default=1.0, type=float)
+parser.add_argument('--reduction-mode', choices=('block', 'net'), help='"block" reduces inner representation for BasicBlock, "net" reduces for all layers', default='net')
 parser.add_argument('--dataset', choices=('cifar10', 'cifar100', 'imagenet'), help='Dataset to train and validate on.', default='cifar10')
 parser.add_argument('--datadir', help='Folder containing data', default='./data/')
 args = parser.parse_args()
@@ -122,7 +123,8 @@ else:
     assert 'shift' not in args.arch or args.reduction == 1, \
         'Only default resnet supports reductions'
     if args.reduction != 1:
-        net = cls(reduction=args.reduction, num_classes=num_classes)
+        print('==> %s with reduction %.2f' % (args.arch, args.reduction))
+        net = cls(reduction=args.reduction, reduction_mode=args.reduction_mode, num_classes=num_classes)
     else:
         net = cls(args.expansion, num_classes=num_classes) if 'shift' in args.arch else cls(num_classes=num_classes)
 

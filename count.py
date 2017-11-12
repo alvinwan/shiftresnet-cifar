@@ -25,6 +25,7 @@ parser.add_argument('--arch', choices=all_models.keys(),
                     help='Architecture to count parameters for', default='shiftresnet110')
 parser.add_argument('--expansion', type=int, default=1, help='expansion for shift layers')
 parser.add_argument('--reduction', type=float, default=1, help='reduction for resnet')
+parser.add_argument('--reduction-mode', choices=('block', 'net'), help='"block" reduces inner representation for BasicBlock, "net" reduces for all layers', default='net')
 args = parser.parse_args()
 
 def count_params(net):
@@ -39,7 +40,7 @@ assert 'shift' not in args.arch or args.reduction == 1, \
     'Only default resnet supports reductions'
 if args.reduction != 1:
     print('==> %s with reduction %.2f' % (args.arch, args.reduction))
-    net = cls(reduction=args.reduction)
+    net = cls(reduction=args.reduction, reduction_mode=args.reduction_mode)
 else:
     net = cls() if 'shift' not in args.arch else cls(expansion=args.expansion)
 new_count = count_params(net)
