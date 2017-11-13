@@ -1,6 +1,6 @@
 # ShiftResNet
 
-Train ResNet with shift operations on CIFAR10 using PyTorch. This uses the [original resnet codebase](https://github.com/kuangliu/pytorch-cifar.git) written by Kuang Liu. In this codebase, we replace 3x3 convolutional layers with a conv-shift-conv--a 1x1 convolutional layer, a set of shift operations, and a second 1x1 convolutional layer. From Liu, this repository boasts:
+Train ResNet with shift operations on CIFAR10, CIFAR100 using PyTorch. This uses the [original resnet CIFAR10 codebase](https://github.com/kuangliu/pytorch-cifar.git) written by Kuang Liu. In this codebase, we replace 3x3 convolutional layers with a conv-shift-conv--a 1x1 convolutional layer, a set of shift operations, and a second 1x1 convolutional layer. From Liu, this repository boasts:
 
 - Built-in data loading and augmentation, very nice!
 - Training is fast, maybe even a little bit faster.
@@ -20,6 +20,9 @@ cd shiftresnet-cifar/models/shiftnet_cuda_v2
 make
 cd ../../
 ```
+
+> **Getting `invalid_device_function`?** Update the architecture code in [`models/shiftnet_cuda_v2/Makefile`](https://github.com/alvinwan/shiftresnet-cifar/blob/master/models/shiftnet_cuda_v2/Makefile#L4), currently configured for a Titan X. e.g., A Tesla K80 is `sm-30`.
+
 3. Run
 ```
 python main.py
@@ -38,7 +41,7 @@ All CIFAR-10 pretrained models can be found on [Google Drive](https://drive.goog
 
 ### CIFAR-10 Accuracy
 
-| Model | `a` | Acc | Acc (res) | Params* | Reduction** | `r`*** |
+| Model | `a` | ShiftResNet Acc | ResNet Acc | Params* | Reduction** | `r`*** |
 |-------|-----|-----|-----------|---------|-------------|--------|
 | ResNet20 | c | 86.66% | 85.84% | 0.03 | 7.8 (7.6) | 12 |
 | ResNet20 | 3c | 90.08% | 88.33% | 0.10 | 2.9 | 3.3 |
@@ -71,7 +74,7 @@ All CIFAR-10 pretrained models can be found on [Google Drive](https://drive.goog
 
 Accuracies below are all Top 1. All CIFAR-100 pretrained models can be found on [Google Drive](https://drive.google.com/drive/u/1/folders/1unOPMsQDagcDa8gI5kFvQ0VH84N7h1V2). Below, we compare reductions in parameters for the entire net (`--reduction_mode=net`) and block-wise (`--reduction_mode=block`)
 
-| Model | `a` | Acc | Acc (res,block) | Acc(res,net) | Params* | Reduction** | `r`*** |
+| Model | `a` | ShiftResNet Acc | ResNet Acc (block)* | ResNet Acc (net) | Params | Reduction | `r` |
 |-------|-----|-----|-----------------|--------------|---------|-------------|--------|
 | ResNet20 | c | 55.62% | 52.40% | 49.58% | 0.03 | 7.8 (7.6) | 12 |
 | ResNet20 | 3c | 62.32% | 60.61% | 58.16% | 0.10 | 2.9 | 3.3 |
@@ -88,3 +91,5 @@ Accuracies below are all Top 1. All CIFAR-100 pretrained models can be found on 
 | ResNet110 | 6c | 72.56% | 40.23% | 68.87% | 1.18 | 1.5 | 1.6 |
 | ResNet110 | 9c | 74.10% | 65.52% | 70.14% | 1.76 | 0.98 (0.95) | 0.98 |
 | ResNet110 | original | - | 72.11% | - | 1.73 | 1.0 | - |
+
+`*` ResNet accuracy using block-wise reduction.
