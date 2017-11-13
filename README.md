@@ -69,22 +69,22 @@ All CIFAR-10 pretrained models can be found on [Google Drive](https://drive.goog
 
 ### CIFAR-100 Accuracy
 
-Accuracies below are all Top 1. All CIFAR-100 pretrained models can be found on [Google Drive](https://drive.google.com/drive/u/1/folders/1unOPMsQDagcDa8gI5kFvQ0VH84N7h1V2).
+Accuracies below are all Top 1. All CIFAR-100 pretrained models can be found on [Google Drive](https://drive.google.com/drive/u/1/folders/1unOPMsQDagcDa8gI5kFvQ0VH84N7h1V2). Below, we compare reductions in parameters for the entire net (`--reduction_mode=net`) and block-wise (`--reduction_mode=block`)
 
-| Model | `a` | Acc | Acc (res) | Params* | Reduction** | `r`*** |
-|-------|-----|-----|-----------|---------|-------------|--------|
-| ResNet20 | c | 55.62% | 52.40% | 0.03 | 7.8 (7.6) | 12 |
-| ResNet20 | 3c | 62.32% | 60.61% | 0.10 | 2.9 | 3.3 |
-| ResNet20 | 6c | 68.64% | 64.27% | 0.19 | 1.5 | 1.6 |
-| ResNet20 | 9c | 69.82% | 66.37% | 0.28 | .98 (1) | 1 |
-| ResNet20 | original | - | 66.25% | 0.27 | 1.0 | - |
-| ResNet56 | c | 65.21% | 56.78% | 0.10 | 8.4 (8.2) | 16 |
-| ResNet56 | 3c | 69.77% | 62.53% | 0.29 | 2.9 | 3.3 |
-| ResNet56 | 6c | 72.13% | 61.99% | 0.58 | 1.5 | 1.6 |
-| ResNet56 | 9c | 73.64% | 68.09% | 0.87 | 0.98 (0.95) | 0.98 |
-| ResNet56 | original | - | 69.27% | 0.86 | 1.0 | - |
-| ResNet110 | c | 67.84% | 39.90% | 0.20 | 8.5 (8.2) | 15 |
-| ResNet110 | 3c | 71.83% | 40.52% | 0.59 | 2.9 | 3.3 |
-| ResNet110 | 6c | 72.56% | 40.23% | 1.18 | 1.5 | 1.6 |
-| ResNet110 | 9c | 74.10% | 62.10% | 1.76 | 0.98 (0.95) | 0.98 |
-| ResNet110 | original | - | 72.11% | 1.73 | 1.0 | - |
+| Model | `a` | Acc | Acc (res,block) | Acc(res,net) | Params* | Reduction** | `r`*** |
+|-------|-----|-----|-----------------|--------------|---------|-------------|--------|
+| ResNet20 | c | 55.62% | 52.40% | (f15) | 0.03 | 7.8 (7.6) | 12 |
+| ResNet20 | 3c | 62.32% | 60.61% | ? | 0.10 | 2.9 | 3.3 |
+| ResNet20 | 6c | 68.64% | 64.27% | ? | 0.19 | 1.5 | 1.6 |
+| ResNet20 | 9c | 69.82% | 66.37% | ? | 0.28 | .98 (1) | 1 |
+| ResNet20 | original | - | 66.25% | - | 0.27 | 1.0 | - |
+| ResNet56 | c | 65.21% | 56.78% | (f16) | 0.10 | 8.4 (8.2) | 16 |
+| ResNet56 | 3c | 69.77% | 62.53% | (a19) | 0.29 | 2.9 | 3.3 |
+| ResNet56 | 6c | 72.13% | 61.99% | (f14) | 0.58 | 1.5 | 1.6 |
+| ResNet56 | 9c | 73.64% | 68.09% | (f13) | 0.87 | 0.98 (0.95) | 0.98 |
+| ResNet56 | original | - | 69.27% | - | 0.86 | 1.0 | - |
+| ResNet110 | c | 67.84% | 39.90% | (f11) | 0.20 | 8.5 (8.2) | 15 |
+| ResNet110 | 3c | 71.83% | 40.52% | (f10) | 0.59 | 2.9 | 3.3 |
+| ResNet110 | 6c | 72.56% | 40.23% | (a20) | 1.18 | 1.5 | 1.6 |
+| ResNet110 | 9c | 74.10% | 62.10% | (a20) | 1.76 | 0.98 (0.95) | 0.98 |
+| ResNet110 | original | - | 72.11% | - | 1.73 | 1.0 | - |
