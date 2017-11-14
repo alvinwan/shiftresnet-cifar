@@ -1,10 +1,11 @@
 # ShiftResNet
 
-Train ResNet with shift operations on CIFAR10, CIFAR100 using PyTorch. This uses the [original resnet CIFAR10 codebase](https://github.com/kuangliu/pytorch-cifar.git) written by Kuang Liu. In this codebase, we replace 3x3 convolutional layers with a conv-shift-conv--a 1x1 convolutional layer, a set of shift operations, and a second 1x1 convolutional layer. From Liu, this repository boasts:
+Train ResNet with shift operations on CIFAR10, CIFAR100 using PyTorch. This uses the [original resnet CIFAR10 codebase](https://github.com/kuangliu/pytorch-cifar.git) written by Kuang Liu. In this codebase, we replace 3x3 convolutional layers with a conv-shift-conv--a 1x1 convolutional layer, a set of shift operations, and a second 1x1 convolutional layer. The repository includes the following:
 
-- Built-in data loading and augmentation, very nice!
-- Training is fast, maybe even a little bit faster.
-- Very memory efficient!
+- utility for training ResNet and ShiftResNet derivatives on CIFAR10/CIFAR100
+- count utility for parameters and FLOPs
+- evaluation script for offline evaluation
+- links to 60+ pretrained models ([CIFAR10 models](https://drive.google.com/drive/u/1/folders/1rD_b5epthHIDqYSERuwx4gVGcpMcomy7), [CIFAR100 models](https://drive.google.com/drive/u/1/folders/1unOPMsQDagcDa8gI5kFvQ0VH84N7h1V2))
 
 ## Getting Started
 
@@ -23,9 +24,55 @@ cd ../../
 
 > **Getting `invalid_device_function`?** Update the architecture code in [`models/shiftnet_cuda_v2/Makefile`](https://github.com/alvinwan/shiftresnet-cifar/blob/master/models/shiftnet_cuda_v2/Makefile#L4), currently configured for a Titan X. e.g., A Tesla K80 is `sm-30`.
 
-3. Run
+3. Run the following. This will get you started, downloading the dataset locally to `./data` accordingly.
+
 ```
 python main.py
+```
+
+By default, the script loads and trains on CIFAR10. Use the `--dataset` flag for CIFAR100.
+
+### ShiftNet Expansion
+
+To control the expansion hyperparameter for ShiftNet, identify a ShiftNet architecture and apply expansion. For example, the following uses ResNet20 with Shift modules of expansion `3c`. We should start by counting parameters and FLOPS (for CIFAR10/CIFAR100):
+
+```
+python count.py --arch=shiftresnet20 --expansion=3
+```
+
+This should output the following parameter and FLOP count:
+
+```
+Parameters: (new) 95642 (original) 272474 (reduction) 2.85
+FLOPs: (new) 25886720 (original) 66781184 (reduction) 2.58
+```
+
+We can then train the specified ShiftResNet. Note the arguments to `main.py` and `count.py` are very similar.
+
+```
+python main.py --arch=shiftresnet20 --expansion=3
+```
+
+### ResNet Reduction
+
+To reduce ResNet by some factor, in terms of its parameters, specify a reduction either block-wise or net-wise. The former reduces the internal channel representation for each BasicBlock. The latter reduces the input and output channels for all convolution layers by half. First, we can check the reduction in parameter count for the entire network. For example, we specify a block-wise reduction of 3x below:
+
+```
+python count.py --arch=resnet20 --reduction=5 --reduction-mode=block
+```
+
+This should output the following parameter and FLOP count:
+
+```
+==> resnet20 with reduction 5.00
+Parameters: (new) 66264 (original) 272474 (reduction) 4.11
+FLOPs: (new) 18776064 (original) 66781184 (reduction) 3.56
+```
+
+Once you have a `--reduction` parameter you're happy with, we can run the following to train a reduced ResNet.
+
+```
+python main.py --arch=resnet20 --reduction=5 --reduction-mode=block
 ```
 
 ## Experiments
