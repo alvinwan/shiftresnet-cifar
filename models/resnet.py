@@ -18,7 +18,9 @@ class ShiftConv(nn.Module):
     def __init__(self, in_planes, out_planes, stride=1, expansion=1):
         super(ShiftConv, self).__init__()
         self.expansion = expansion
-        mid_planes = int(out_planes * self.expansion)
+        self.in_planes = in_planes
+        self.out_planes = out_planes
+        self.mid_planes = mid_planes = int(out_planes * self.expansion)
 
         self.conv1 = nn.Conv2d(
             in_planes, mid_planes, kernel_size=1, bias=False)
@@ -38,7 +40,17 @@ class ShiftConv(nn.Module):
                 nn.BatchNorm2d(out_planes)
             )
 
+    def flops(self):
+        if not hasattr(self, 'x'):
+            raise UserWarning('Must run forward at least once')
+        n, c, h, w = self.x.size()
+        flops = h*w*self.in_planes*self.mid_planes + h*w*self.mid_planes*self.out_planes
+        if len(self.shortcut) > 0:
+            flops += self.in_planes*self.out_planes*h*w
+        return flops
+
     def forward(self, x):
+        self.x = x
         shortcut = self.shortcut(x)
         x = F.relu(self.bn1(self.conv1(x)))
         x = F.relu(self.bn2(self.conv2(self.shift2(x))))
@@ -51,20 +63,33 @@ class BasicBlock(nn.Module):
     def __init__(self, in_planes, planes, stride=1, reduction=1):
         super(BasicBlock, self).__init__()
         self.expansion = 1 / float(reduction)
-        dim = int(self.expansion * planes)
-        self.conv1 = nn.Conv2d(in_planes, dim, kernel_size=3, stride=stride, padding=1, bias=False)
-        self.bn1 = nn.BatchNorm2d(dim)
-        self.conv2 = nn.Conv2d(dim, planes, kernel_size=3, stride=1, padding=1, bias=False)
+        self.in_planes = in_planes
+        self.mid_planes = mid_planes = int(self.expansion * planes)
+        self.out_planes = planes
+
+        self.conv1 = nn.Conv2d(in_planes, mid_planes, kernel_size=3, stride=stride, padding=1, bias=False)
+        self.bn1 = nn.BatchNorm2d(mid_planes)
+        self.conv2 = nn.Conv2d(mid_planes, planes, kernel_size=3, stride=1, padding=1, bias=False)
         self.bn2 = nn.BatchNorm2d(planes)
 
         self.shortcut = nn.Sequential()
-        if stride != 1 or in_planes != dim:
+        if stride != 1 or in_planes != mid_planes:
             self.shortcut = nn.Sequential(
                 nn.Conv2d(in_planes, planes, kernel_size=1, stride=stride, bias=False),
                 nn.BatchNorm2d(planes)
             )
 
+    def flops(self):
+        if not hasattr(self, 'x'):
+            raise UserWarning('Must run forward at least once')
+        n, c, h, w = self.x.size()
+        flops = h*w*9*self.mid_planes*self.in_planes + h*w*9*self.mid_planes*self.out_planes
+        if len(self.shortcut) > 0:
+            flops += self.in_planes*self.out_planes*h*w
+        return flops
+
     def forward(self, x):
+        self.x = x
         out = F.relu(self.bn1(self.conv1(x)))
         out = self.bn2(self.conv2(out))
         out += self.shortcut(x)
@@ -76,13 +101,14 @@ class ResNet(nn.Module):
     def __init__(self, block, num_blocks, reduction=1, num_classes=10):
         super(ResNet, self).__init__()
         self.reduction = float(reduction) ** 0.5
+        self.num_classes = num_classes
         self.in_planes = int(16 / self.reduction)
 
-        self.conv1 = nn.Conv2d(3, int(16 / self.reduction), kernel_size=3, stride=1, padding=1, bias=False)
-        self.bn1 = nn.BatchNorm2d(int(16 / self.reduction))
-        self.layer1 = self._make_layer(block, 16 / self.reduction, num_blocks[0], stride=1)
-        self.layer2 = self._make_layer(block, 32 / self.reduction, num_blocks[1], stride=2)
-        self.layer3 = self._make_layer(block, 64 / self.reduction, num_blocks[2], stride=2)
+        self.conv1 = nn.Conv2d(3, self.in_planes, kernel_size=3, stride=1, padding=1, bias=False)
+        self.bn1 = nn.BatchNorm2d(self.in_planes)
+        self.layer1 = self._make_layer(block, self.in_planes, num_blocks[0], stride=1)
+        self.layer2 = self._make_layer(block, int(32 / self.reduction), num_blocks[1], stride=2)
+        self.layer3 = self._make_layer(block, int(64 / self.reduction), num_blocks[2], stride=2)
         self.linear = nn.Linear(int(64 / self.reduction), num_classes)
 
     def _make_layer(self, block, planes, num_blocks, stride):
@@ -94,7 +120,18 @@ class ResNet(nn.Module):
             self.in_planes = planes
         return nn.Sequential(*layers)
 
+    def flops(self):
+        if not hasattr(self, 'x'):
+            raise UserWarning('Must run forward at least once')
+        n, c, h, w = self.x.size()
+        flops = 0
+        for mod in (self.layer1, self.layer2, self.layer3):
+            for layer in mod:
+                flops += layer.flops()
+        return h*w*9*3*self.in_planes + h*w*self.in_planes*4*self.num_classes + flops
+
     def forward(self, x):
+        self.x = x
         out = F.relu(self.bn1(self.conv1(x)))
         out = self.layer1(out)
         out = self.layer2(out)
