@@ -7,6 +7,19 @@ Train ResNet with shift operations on CIFAR10, CIFAR100 using PyTorch. This uses
 - evaluation script for offline evaluation
 - links to 60+ pretrained models ([CIFAR10 models](https://drive.google.com/drive/u/1/folders/1rD_b5epthHIDqYSERuwx4gVGcpMcomy7), [CIFAR100 models](https://drive.google.com/drive/u/1/folders/1unOPMsQDagcDa8gI5kFvQ0VH84N7h1V2))
 
+## [_Shift:_ A Zero FLOP, Zero Parameter Alternative to Spatial Convolutions](https://arxiv.org/abs/1612.01051)
+By Bichen Wu, Alvin Wan, Xiangyu Yue, Peter Jin, Sicheng Zhao, Noah Golmant, Amir Gholaminejad, Joseph Gonzalez, Kurt Keutzer
+
+Tradeoffs and further analysis can be found in the paper. If you find this work useful for your research, please consider citing:
+
+    @inproceedings{squeezedet,
+        Author = {Bichen Wu and Alvin Wan and Xiangyu Yue and Peter Jin and Sicheng Zhao and Noah Golmant and Amir Gholaminejad and Joseph Gonzalez and Kurt Keutzer},
+        Title = {Shift: A Zero FLOP, Zero Parameter Alternative to Spatial Convolutions},
+        Journal = {arXiv:1711.08141},
+        Year = {2017}
+    }
+    
+
 ## Getting Started
 
 1. Clone the repository
