@@ -1,6 +1,7 @@
-'''ResNet in PyTorch.
+'''PyTorch implementation of ShiftResNet
 
-For Pre-activation ResNet, see 'preact_resnet.py'.
+ShiftResNet modifications written by Bichen Wu and Alvin Wan, based
+off of ResNet implementation by Kuang Liu.
 
 Reference:
 [1] Kaiming He, Xiangyu Zhang, Shaoqing Ren, Jian Sun
@@ -11,7 +12,8 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 from torch.autograd import Variable
-from shiftnet_cuda_v2 import Shift3x3_cuda, GenericShift_cuda
+from models.shiftnet_cuda_v2.nn import GenericShift_cuda
+from models.shiftnet_cuda_v2.nn import Shift3x3_cuda
 
 class ShiftConv(nn.Module):
 
@@ -41,19 +43,20 @@ class ShiftConv(nn.Module):
             )
 
     def flops(self):
-        if not hasattr(self, 'x'):
+        if not hasattr(self, 'int_nchw'):
             raise UserWarning('Must run forward at least once')
-        n, c, h, w = self.x.size()
-        flops = h*w*self.in_planes*self.mid_planes + h*w*self.mid_planes*self.out_planes
+        (_, _, int_h, int_w), (_, _, out_h, out_w) = self.int_nchw, self.out_nchw
+        flops = int_h*int_w*self.in_planes*self.mid_planes + out_h*out_w*self.mid_planes*self.out_planes
         if len(self.shortcut) > 0:
-            flops += self.in_planes*self.out_planes*h*w
+            flops += self.in_planes*self.out_planes*out_h*out_w
         return flops
 
     def forward(self, x):
-        self.x = x
         shortcut = self.shortcut(x)
         x = F.relu(self.bn1(self.conv1(x)))
+        self.int_nchw = x.size()
         x = F.relu(self.bn2(self.conv2(self.shift2(x))))
+        self.out_nchw = x.size()
         x += shortcut
         return x
 
@@ -73,25 +76,26 @@ class BasicBlock(nn.Module):
         self.bn2 = nn.BatchNorm2d(planes)
 
         self.shortcut = nn.Sequential()
-        if stride != 1 or in_planes != mid_planes:
+        if stride != 1 or in_planes != planes:
             self.shortcut = nn.Sequential(
                 nn.Conv2d(in_planes, planes, kernel_size=1, stride=stride, bias=False),
                 nn.BatchNorm2d(planes)
             )
 
     def flops(self):
-        if not hasattr(self, 'x'):
+        if not hasattr(self, 'int_nchw'):
             raise UserWarning('Must run forward at least once')
-        n, c, h, w = self.x.size()
-        flops = h*w*9*self.mid_planes*self.in_planes + h*w*9*self.mid_planes*self.out_planes
+        (_, _, int_h, int_w), (_, _, out_h, out_w) = self.int_nchw, self.out_nchw
+        flops = int_h*int_w*9*self.mid_planes*self.in_planes + out_h*out_w*9*self.mid_planes*self.out_planes
         if len(self.shortcut) > 0:
-            flops += self.in_planes*self.out_planes*h*w
+            flops += self.in_planes*self.out_planes*out_h*out_w
         return flops
 
     def forward(self, x):
-        self.x = x
         out = F.relu(self.bn1(self.conv1(x)))
+        self.int_nchw = out.size()
         out = self.bn2(self.conv2(out))
+        self.out_nchw = out.size()
         out += self.shortcut(x)
         out = F.relu(out)
         return out
@@ -121,23 +125,24 @@ class ResNet(nn.Module):
         return nn.Sequential(*layers)
 
     def flops(self):
-        if not hasattr(self, 'x'):
+        if not hasattr(self, 'int_nchw'):
             raise UserWarning('Must run forward at least once')
-        n, c, h, w = self.x.size()
+        (_, _, int_h, int_w), (out_h, out_w) = self.int_nchw, self.out_hw
         flops = 0
         for mod in (self.layer1, self.layer2, self.layer3):
             for layer in mod:
                 flops += layer.flops()
-        return h*w*9*3*self.in_planes + h*w*self.in_planes*4*self.num_classes + flops
+        return int_h*int_w*9*self.in_planes + out_w*self.num_classes + flops
 
     def forward(self, x):
-        self.x = x
         out = F.relu(self.bn1(self.conv1(x)))
+        self.int_nchw = out.size()
         out = self.layer1(out)
         out = self.layer2(out)
         out = self.layer3(out)
         out = F.avg_pool2d(out, 8)
         out = out.view(out.size(0), -1)
+        self.out_hw = out.size()
         out = self.linear(out)
         return out
 

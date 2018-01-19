@@ -1,4 +1,4 @@
-import shiftnet_cuda
+from . import shiftnet_cuda
 import torch
 from torch.autograd import Function, Variable
 
