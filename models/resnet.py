@@ -61,6 +61,46 @@ class ShiftConv(nn.Module):
         return x
 
 
+class DepthWiseBlock(nn.Module):
+
+    def __init__(self, in_planes, planes, stride=1, reduction=1):
+        super(BasicBlock, self).__init__()
+        self.expansion = 1 / float(reduction)
+        self.in_planes = in_planes
+        self.mid_planes = mid_planes = int(self.expansion * planes)
+        self.out_planes = planes
+
+        self.conv1 = nn.Conv2d(in_planes, mid_planes, kernel_size=3, stride=stride, padding=1, bias=False, groups=in_planes)
+        self.bn1 = nn.BatchNorm2d(mid_planes)
+        self.conv2 = nn.Conv2d(mid_planes, planes, kernel_size=3, stride=1, padding=1, bias=False, groups=mid_planes)
+        self.bn2 = nn.BatchNorm2d(planes)
+
+        self.shortcut = nn.Sequential()
+        if stride != 1 or in_planes != planes:
+            self.shortcut = nn.Sequential(
+                nn.Conv2d(in_planes, planes, kernel_size=1, stride=stride, bias=False),
+                nn.BatchNorm2d(planes)
+            )
+
+    def flops(self):
+        if not hasattr(self, 'int_nchw'):
+            raise UserWarning('Must run forward at least once')
+        (_, _, int_h, int_w), (_, _, out_h, out_w) = self.int_nchw, self.out_nchw
+        flops = int_h*int_w*9*self.mid_planes*self.in_planes + out_h*out_w*9*self.mid_planes*self.out_planes
+        if len(self.shortcut) > 0:
+            flops += self.in_planes*self.out_planes*out_h*out_w
+        return flops
+
+    def forward(self, x):
+        out = F.relu(self.bn1(self.conv1(x)))
+        self.int_nchw = out.size()
+        out = self.bn2(self.conv2(out))
+        self.out_nchw = out.size()
+        out += self.shortcut(x)
+        out = F.relu(out)
+        return out
+
+
 class BasicBlock(nn.Module):
 
     def __init__(self, in_planes, planes, stride=1, reduction=1):
@@ -151,6 +191,9 @@ def ResNetWrapper(num_blocks, reduction=1, reduction_mode='net', num_classes=10)
         block = lambda in_planes, planes, stride: \
             BasicBlock(in_planes, planes, stride, reduction=reduction)
         return ResNet(block, num_blocks, num_classes=num_classes)
+    elif reduction_mode == 'depthwise':
+        block = lambda in_planes, planes, stride: \
+            DepthWiseBlock(in_planes, planes, stride, reduction=reduction)
     return ResNet(BasicBlock, num_blocks, num_classes=num_classes, reduction=reduction)
 
 def ResNet20(reduction=1, reduction_mode='net', num_classes=10):
