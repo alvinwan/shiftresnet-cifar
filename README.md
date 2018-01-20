@@ -97,59 +97,54 @@ Below, we run experiments on the following:
 
 `a` is the number of filters in the first set of 1x1 convolutional filters. `c` is the number of channels in our input.=
 
-All CIFAR-10 pretrained models can be found on [Google Drive](https://drive.google.com/drive/u/1/folders/1rD_b5epthHIDqYSERuwx4gVGcpMcomy7).
+### CIFAR-100 Accuracy
+
+Accuracies below are all Top 1. All CIFAR-100 pretrained models can be found on [Google Drive](https://drive.google.com/drive/u/1/folders/1unOPMsQDagcDa8gI5kFvQ0VH84N7h1V2). Below, we compare reductions in parameters for the entire net (`--reduction_mode=net`) and block-wise (`--reduction_mode=block`)
+
+| Model | `e` | ShiftResNet Acc | ResNet Acc* | Params | Reduction |
+|-------|-----|-----------------|--------------|---------|-------------|
+| ResNet20 | c | 55.05% | 50.23% | 0.03 | 7.8 (7.2) |
+| ResNet20 | 3c | 65.83% | 60.72% | 0.10 | 2.9 (2.8) |
+| ResNet20 | 6c | 69.73% | 65.59% | 0.19 | 1.5 |
+| ResNet20 | 9c | 70.77% | 68.30% | 0.28 | .98 |
+| ResNet20 | original | - | 66.25% | 0.27 | 1.0 |
+| ResNet56 | c | 63.20% | 58.70% | 0.10 | 8.4 (7.6) |
+| ResNet56 | 3c | 69.77% | 66.89% | 0.29 | 2.9 |
+| ResNet56 | 6c | 72.33% | 70.49% | 0.58 | 1.5 |
+| ResNet56 | 9c | 73.43% | 71.57% | 0.87 | 0.98 |
+| ResNet56 | original | - | 69.27% | - | 0.86 | 1.0 |
+| ResNet110 | c | 68.01% | 65.79% | 0.20 | 8.5 (7.8) |
+| ResNet110 | 3c | 72.10% | 70.22% | 0.59 | 2.9 |
+| ResNet110 | 6c | 73.17% | 72.21% | 1.18 | 1.5 |
+| ResNet110 | 9c | 73.71% | 72.67% | 1.76 | 0.98 |
+| ResNet110 | original | - | 72.11% | - | 1.73 | 1.0 |
+
+`*` ResNet accuracy using block-wise reduction.
 
 ### CIFAR-10 Accuracy
 
-| Model | `a` | ShiftResNet Acc | ResNet Acc | Params* | Reduction** | `r`*** |
-|-------|-----|-----|-----------|---------|-------------|--------|
-| ResNet20 | c | 86.66% | 85.84% | 0.03 | 7.8 (7.6) | 12 |
-| ResNet20 | 3c | 90.08% | 88.33% | 0.10 | 2.9 | 3.3 |
-| ResNet20 | 6c | 90.59% | 90.09% | 0.19 | 1.5 | 1.6 |
-| ResNet20 | 9c | 91.69% | 91.35% | 0.28 | .98 (1) | 1 |
-| ResNet20 | original | - | 91.35% | 0.27 | 1.0 | - |
-| ResNet56 | c | 89.71% | 87.46% | 0.10 | 8.4 (8.2) | 16 |
-| ResNet56 | 3c | 92.11% | 89.40% | 0.29 | 2.9 | 3.3 |
-| ResNet56 | 6c | 92.69% | 89.89% | 0.58 | 1.5 | 1.6 |
-| ResNet56 | 9c | 92.74% | 92.01% | 0.87 | 0.98 (0.95) | 0.98 |
-| ResNet56 | original | - | 92.01% | 0.86 | 1.0 | - |
-| ResNet110 | c | 90.34% | 76.82% | 0.20 | 8.5 (8.2) | 15 |
-| ResNet110 | 3c | 91.98% | 74.30% | 0.59 | 2.9 | 3.3 |
-| ResNet110 | 6c | 93.17% | 79.02% | 1.18 | 1.5 | 1.6 |
-| ResNet110 | 9c | 92.79% | 92.46% | 1.76 | 0.98 (0.95) | 0.98 |
-| ResNet110 | original | - | 92.46% | 1.73 | 1.0 | - |
+All CIFAR-10 pretrained models can be found on [Google Drive](https://drive.google.com/open?id=1aszFPLvEDcJsNRBwz-J5eI5VN6Cyc3pP).
+
+| Model | `e` | ShiftResNet Acc | ResNet Acc | Params* | Reduction** |
+|-------|-----|-----|-----------|---------|-------------|
+| ResNet20 | c | 85.78% | 84.77% | 0.03 | 7.8 (7.2) |
+| ResNet20 | 3c | 89.56% | 88.81% | 0.10 | 2.9 (2.8) |
+| ResNet20 | 6c | 91.07% | 91.30% | 0.19 | 1.5  |
+| ResNet20 | 9c | 91.79 | 91.96% | 0.28 | .98 |
+| ResNet20 | original | - | 91.35% | 0.27 | 1.0 |
+| ResNet56 | c | 89.69% | 88.32% | 0.10 | 8.4 (7.6) |
+| ResNet56 | 3c | 92.48% | 91.20% | 0.29 | 2.9 |
+| ResNet56 | 6c | 93.49% | 93.01% | 0.58 | 1.5 |
+| ResNet56 | 9c | 93.17% | 93.74% | 0.87 | 0.98 |
+| ResNet56 | original | - | 92.01% | 0.86 | 1.0 |
+| ResNet110 | c | 90.67% | 89.79% | 0.20 | 8.5 (7.8) |
+| ResNet110 | 3c | 92.42% | 93.18% | 0.59 | 2.9 |
+| ResNet110 | 6c | 93.03% | 93.40% | 1.18 | 1.5 |
+| ResNet110 | 9c | 93.36% | 94.09% | 1.76 | 0.98 (0.95) |
+| ResNet110 | original | - | 92.46% | 1.73 | 1.0 |
 
 `*` parameters are in the millions
 
 `**` The number in parantheses is the reduction in parameters we used for ResNet, if we could not obtain the exact reduction in parameters used for shift.
 
-`***` If using `--reduction_mode=block`, this is the value that you pass to `main.py` for the `--reduction` flag, to reproduce the provided accuracies. This represents the amount to reduce each resnet block's number of "internal convolutional channels" by. In constrast, the column to the left of it is the total neural network's reduction in parameters.
-
-<!--| ResNet110 | 2c | 91.84% | 0.40 | 4.4 |
-| ResNet110 | 4c | 91.93% |  0.79 | 2.2 |
-| ResNet110 | 5c | 91.77% |  0.98 | 1.8 |
-| ResNet110 | 7c | 92.23% |  1.37 | 1.3 |-->
-
-### CIFAR-100 Accuracy
-
-Accuracies below are all Top 1. All CIFAR-100 pretrained models can be found on [Google Drive](https://drive.google.com/drive/u/1/folders/1unOPMsQDagcDa8gI5kFvQ0VH84N7h1V2). Below, we compare reductions in parameters for the entire net (`--reduction_mode=net`) and block-wise (`--reduction_mode=block`)
-
-| Model | `a` | ShiftResNet Acc | ResNet Acc (block)* | ResNet Acc (net) | Params | Reduction | `r` |
-|-------|-----|-----|-----------------|--------------|---------|-------------|--------|
-| ResNet20 | c | 55.62% | 52.40% | 49.58% | 0.03 | 7.8 (7.6) | 12 |
-| ResNet20 | 3c | 62.32% | 60.61% | 58.16% | 0.10 | 2.9 | 3.3 |
-| ResNet20 | 6c | 68.64% | 64.27% | 63.22% | 0.19 | 1.5 | 1.6 |
-| ResNet20 | 9c | 69.82% | 66.25% | 65.31% | 0.28 | .98 (1) | 1 |
-| ResNet20 | original | - | 66.25% | - | 0.27 | 1.0 | - |
-| ResNet56 | c | 65.21% | 56.78% | 56.62% | 0.10 | 8.4 (8.2) | 16 |
-| ResNet56 | 3c | 69.77% | 62.53% | 64.49% | 0.29 | 2.9 | 3.3 |
-| ResNet56 | 6c | 72.13% | 61.99% | 67.45% | 0.58 | 1.5 | 1.6 |
-| ResNet56 | 9c | 73.64% | 69.27% | 68.63% | 0.87 | 0.98 (0.95) | 0.98 |
-| ResNet56 | original | - | 69.27% | - | 0.86 | 1.0 | - |
-| ResNet110 | c | 67.84% | 39.90% | 60.44% | 0.20 | 8.5 (8.2) | 15 |
-| ResNet110 | 3c | 71.83% | 40.52% | 66.61% | 0.59 | 2.9 | 3.3 |
-| ResNet110 | 6c | 72.56% | 40.23% | 68.87% | 1.18 | 1.5 | 1.6 |
-| ResNet110 | 9c | 74.10% | 72.11% | 70.14% | 1.76 | 0.98 (0.95) | 0.98 |
-| ResNet110 | original | - | 72.11% | - | 1.73 | 1.0 | - |
-
-`*` ResNet accuracy using block-wise reduction.
+`***` If using `--reduction_mode=block`, pass the `reduction` to `main.py` for the `--reduction` flag, to reproduce the provided accuracies. This represents the amount to reduce each resnet block's number of "internal convolutional channels" by. In constrast, the column to the left of it is the total neural network's reduction in parameters.
