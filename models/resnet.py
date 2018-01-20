@@ -73,10 +73,11 @@ class DepthWiseBlock(nn.Module):
         self.conv1 = nn.Conv2d(
             in_planes, mid_planes, kernel_size=1, bias=False)
         self.bn1 = nn.BatchNorm2d(mid_planes)
-        self.depth = nn.Conv2d(mid_planes, mid_planes, kernel_size=1, stride=1, bias=False, groups=mid_planes)
-        self.conv2 = nn.Conv2d(
+        self.depth = nn.Conv2d(mid_planes, mid_planes, kernel_size=3, padding=1, stride=1, bias=False, groups=mid_planes)
+        self.bn2 = nn.BatchNorm2d(mid_planes)
+        self.conv3 = nn.Conv2d(
             mid_planes, out_planes, kernel_size=1, bias=False, stride=stride)
-        self.bn2 = nn.BatchNorm2d(out_planes)
+        self.bn3 = nn.BatchNorm2d(out_planes)
 
         self.shortcut = nn.Sequential()
         if stride != 1 or in_planes != out_planes:
@@ -90,7 +91,7 @@ class DepthWiseBlock(nn.Module):
             raise UserWarning('Must run forward at least once')
         (_, _, int_h, int_w), (_, _, out_h, out_w) = self.int_nchw, self.out_nchw
         flops = int_h*int_w*9*self.mid_planes*self.in_planes + out_h*out_w*9*self.mid_planes*self.out_planes
-        flops += out_h*out_w*self.mid_planes  # depth-wise convolution
+        flops += out_h*out_w*self.mid_planes*9  # depth-wise convolution
         if len(self.shortcut) > 0:
             flops += self.in_planes*self.out_planes*out_h*out_w
         return flops
@@ -98,8 +99,8 @@ class DepthWiseBlock(nn.Module):
     def forward(self, x):
         out = F.relu(self.bn1(self.conv1(x)))
         self.int_nchw = out.size()
-        out = self.depth(out)
-        out = self.bn2(self.conv2(out))
+        out = self.bn2(self.depth(out))
+        out = self.bn3(self.conv3(out))
         self.out_nchw = out.size()
         out += self.shortcut(x)
         out = F.relu(out)
