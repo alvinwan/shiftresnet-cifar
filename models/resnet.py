@@ -90,7 +90,7 @@ class DepthWiseBlock(nn.Module):
         if not hasattr(self, 'int_nchw'):
             raise UserWarning('Must run forward at least once')
         (_, _, int_h, int_w), (_, _, out_h, out_w) = self.int_nchw, self.out_nchw
-        flops = int_h*int_w*9*self.mid_planes*self.in_planes + out_h*out_w*9*self.mid_planes*self.out_planes
+        flops = int_h*int_w*self.mid_planes*self.in_planes + out_h*out_w*self.mid_planes*self.out_planes
         flops += out_h*out_w*self.mid_planes*9  # depth-wise convolution
         if len(self.shortcut) > 0:
             flops += self.in_planes*self.out_planes*out_h*out_w
