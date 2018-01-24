@@ -27,7 +27,7 @@ parser.add_argument('--arch', choices=all_models.keys(),
                     help='Architecture to count parameters for', default='shiftresnet110')
 parser.add_argument('--expansion', type=int, default=1, help='expansion for shift layers')
 parser.add_argument('--reduction', type=float, default=1, help='reduction for resnet')
-parser.add_argument('--reduction-mode', choices=('block', 'net', 'depthwise'), help='"block" reduces inner representation for BasicBlock, "net" reduces for all layers', default='net')
+parser.add_argument('--reduction-mode', choices=('block', 'net', 'depthwise', 'shuffle'), help='"block" reduces inner representation for BasicBlock, "net" reduces for all layers', default='net')
 args = parser.parse_args()
 
 def count_params(net):
