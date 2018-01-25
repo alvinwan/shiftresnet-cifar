@@ -126,11 +126,11 @@ class ShuffleLayer(nn.Module):
 
 class ShuffleBlock(nn.Module):
 
-    def __init__(self, in_planes, out_planes, stride=1, reduction=1, groups=2):
+    def __init__(self, in_planes, out_planes, stride=1, reduction=1, groups=4):
         super(ShuffleBlock, self).__init__()
         self.expansion = 1 / float(reduction)
         self.in_planes = in_planes
-        self.mid_planes = mid_planes = int(self.expansion * out_planes)
+        self.mid_planes = mid_planes = int(self.expansion * out_planes // groups * groups)
         self.out_planes = out_planes
         self.groups = groups
 
@@ -141,13 +141,13 @@ class ShuffleBlock(nn.Module):
         self.depth = nn.Conv2d(mid_planes, mid_planes, kernel_size=3, padding=1, stride=stride, bias=False, groups=mid_planes)
         self.bn2 = nn.BatchNorm2d(mid_planes)
         self.conv3 = nn.Conv2d(
-            mid_planes, out_planes, kernel_size=1, groups=groups, bias=False, stride=stride)
+            mid_planes, out_planes, kernel_size=1, groups=groups, bias=False)
         self.bn3 = nn.BatchNorm2d(out_planes)
 
         self.shortcut = nn.Sequential()
         if stride != 1 or in_planes != out_planes:
             self.shortcut = nn.Sequential(
-                nn.Conv2d(in_planes, out_planes, kernel_size=1, stride=stride, bias=False),
+                nn.Conv2d(in_planes, out_planes, kernel_size=1, stride=2, bias=False),
                 nn.BatchNorm2d(out_planes)
             )
 
