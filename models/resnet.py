@@ -79,13 +79,6 @@ class DepthWiseBlock(nn.Module):
             mid_planes, out_planes, kernel_size=1, bias=False, stride=stride)
         self.bn3 = nn.BatchNorm2d(out_planes)
 
-        self.shortcut = nn.Sequential()
-        if stride != 1 or in_planes != out_planes:
-            self.shortcut = nn.Sequential(
-                nn.Conv2d(in_planes, out_planes, kernel_size=1, stride=stride, bias=False),
-                nn.BatchNorm2d(out_planes)
-            )
-
     def flops(self):
         if not hasattr(self, 'int_nchw'):
             raise UserWarning('Must run forward at least once')
@@ -102,7 +95,6 @@ class DepthWiseBlock(nn.Module):
         out = self.bn2(self.depth(out))
         out = self.bn3(self.conv3(out))
         self.out_nchw = out.size()
-        out += self.shortcut(x)
         out = F.relu(out)
         return out
 
@@ -121,7 +113,7 @@ class ShuffleLayer(nn.Module):
         '''Channel shuffle: [N,C,H,W] -> [N,g,C/g,H,W] -> [N,C/g,g,H,w] -> [N,C,H,W]'''
         N,C,H,W = x.size()
         g = self.groups
-        return x.view(N,g,C/g,H,W).permute(0,2,1,3,4).contiguous().view(N,C,H,W)
+        return x.view(N,g,C//g,H,W).permute(0,2,1,3,4).contiguous().view(N,C,H,W)
 
 
 class ShuffleBlock(nn.Module):
