@@ -60,7 +60,49 @@ class ShiftConv(nn.Module):
         x += shortcut
         return x
 
-
+class MobileNetLikeBlock(nn.Module):
+    def __init__(self, in_planes, out_planes, stride=1, reduction=1):
+        # by default, increase in_planes and out_planes by 3x such that it 
+        # matches with a 3x3 convolution with the same param size.
+        self.mult_ratio = 3. / reduction
+        self.in_planes = int(in_planes * self.mult_ratio)
+        self.out_planes = int(out_planes * self.mult_ratio)
+        
+        self.depth1 = nn.Conv2d(
+            in_planes, in_planes, kernel_size=3, padding=1, 
+            stride=stride, bias=False, groups=in_planes)
+        self.depth_bn1 = nn.BatchNorm2d(in_planes)
+        
+        self.conv1 = nn.Conv2d(in_planes, out_planes, kernel_size=1, bias=False)
+        self.bn1 = nn.BatchNorm2d(out_planes)
+        
+        self.depth2 = nn.Conv2d(
+            out_planes, out_planes, kernel_size=3, padding=1,
+            stride=1, bias=False, group=out_planes)
+        self.depth_bn2 = nn.BatchNorm2d(out_planes)
+        
+        self.conv2 = nn.Conv2d(out_planes, out_planes, kernel_size=1, bias=False)
+        self.bn2 = nn.BatchNorm2d(out_planes)
+    
+    def flops(self):
+        if not hasattr(self, 'int_nchw'):
+            raise UserWarning('Must run forward at least once')
+        (_, _, int_h, int_w), (_, _, out_h, out_w) = self.int_nchw, self.out_nchw
+        flops = out_h * out_w * self.in_planes * 9
+        flops += out_h * out_w * self.in_planes * self.out_planes
+        flops += out_h * out_w * self.out_planes * 9
+        flops += out_h * out_w * self.out_planes * self.out_planes
+        return flops        
+    
+    def forward(self, x):
+        self.int_nchw = x.size()
+        x = F.relu(self.depth_bn1(self.depth1(x)))
+        x = F.relu(self.bn1(self.conv1(x)))
+        x = F.relu(self.depth_bn2(self.depth2(x)))
+        x = F.relu(self.bn2(self.conv2(x)))
+        self.out_nchw = x.size()
+        return x
+    
 class DepthWiseBlock(nn.Module):
 
     def __init__(self, in_planes, out_planes, stride=1, reduction=1):
