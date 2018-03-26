@@ -1,0 +1,4 @@
+[submodule "models/shiftnet_cuda_v2"]
+	path = models/shiftnet_cuda_v2
+	url = git@github.com:peterhj/shiftnet_cuda_v2.git
+	branch = master
