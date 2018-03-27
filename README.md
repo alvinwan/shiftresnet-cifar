@@ -167,10 +167,10 @@ Accuracies below are all Top 1. All CIFAR-100 pretrained models can be found on 
 | ResNet56  | 6c | **72.33%** | 70.49% | 72.09% | | 0.58 | 1.5 | 0.19 | 0.065 |
 | ResNet56  | 9c | **73.43%** | 71.57% | 71.14% | | 0.87 | 0.98 | 0.124 | 0.04 |
 | ResNet56  | -- | -- | 69.27% | -- | | 0.86 | 1.0 | -- | -- |
-| ResNet110 | 1c | **68.01%** | 65.79% | 67.96% | | 0.20 | 8.5 (7.8) | 1.1 | 0.37 |
-| ResNet110 | 3c | **72.10%** | 70.22% | 71.87% | | 0.59 | 2.9 | 0.37 | 0.125 |
-| ResNet110 | 6c | **73.17%** | 72.21% | 71.13% | | 1.18 | 1.5 | 0.19 | 0.065 |
-| ResNet110 | 9c | **73.71%** | 72.67% | 68.74% | | 1.76 | 0.98 | 0.123 | 0.04 |
+| ResNet110 | 1c | **68.01%** | 65.79% | 67.96% | ~67.71%~ | 0.20 | 8.5 (7.8) | 1.1 | 0.37 |
+| ResNet110 | 3c | **72.10%** | 70.22% | 71.87% | ~70.23%~ | 0.59 | 2.9 | 0.37 | 0.125 |
+| ResNet110 | 6c | **73.17%** | 72.21% | 71.13% | ~66.86%~ | 1.18 | 1.5 | 0.19 | 0.065 |
+| ResNet110 | 9c | **73.71%** | 72.67% | 68.74% |  | 1.76 | 0.98 | 0.123 | 0.04 |
 | ResNet110 | -- | -- | 72.11% | -- | | 1.73 | 1.0 | -- | -- |
 
 `*` `SRN` ShiftResNet and `RN` ResNet accuracy using convolutional layers (by reducing the number of channels in the intermediate representation of each ResNet block) and using depth-wise convolutional layers (again reducing number of channels in intermediate representation)
