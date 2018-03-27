@@ -155,10 +155,10 @@ Below, we run experiments on the following:
 
 Accuracies below are all Top 1. All CIFAR-100 pretrained models can be found on [Google Drive](https://drive.google.com/drive/u/1/folders/1unOPMsQDagcDa8gI5kFvQ0VH84N7h1V2). Below, we compare reductions in parameters for the entire net (`--reduction_mode=net`) and block-wise (`--reduction_mode=block`)
 
-| Model | `e` | SRN Acc* | RN Conv Acc | RN Depth Acc | RN Shuffle Acc | Params | Reduction (conv) | `r`** | `r`*** |
+| Model | `e` | SRN Acc* | RN Conv Acc | RN Depth Acc | MobileNet | Params | Reduction (conv) | `r`** | `r`*** |
 |-------|-----|----------|-------------|--------------|----------------|--------|------------------|-------|--------|
 | ResNet20  | 1c | **55.05%** | 50.23% | 46.27% | | 0.03 | 7.8 (7.2) | 1.12 | 0.38 |
-| ResNet20  | 3c | **65.83%** | 60.72% | 63.31% | | 0.10 | 2.9 (2.8) | 0.38 | 0.13 |
+| ResNet20  | 3c | **65.83%** | 60.72% | 63.31% | | 0.10 | 2.9 (2.8) | 0.38 | 0.13 | 
 | ResNet20  | 6c | **69.73%** | 65.59% | 68.32% | | 0.19 | 1.5 | 0.19 | 0.065 |
 | ResNet20  | 9c | 70.77% | 68.30% | **71.09%** | | 0.28 | .98 | 0.125 | 0.04 |
 | ResNet20  | -- | -- | 66.25% | -- | | 0.27 | 1.0 | -- | -- |
@@ -175,7 +175,7 @@ Accuracies below are all Top 1. All CIFAR-100 pretrained models can be found on 
 
 `*` `SRN` ShiftResNet and `RN` ResNet accuracy using convolutional layers (by reducing the number of channels in the intermediate representation of each ResNet block) and using depth-wise convolutional layers (again reducing number of channels in intermediate representation)
 
-`**` This parameter `r` is used for the `--reduction` flag when replicating results for depth-wise convolutional blocks.
+`**` This parameter `r` is used for the `--reduction` flag when replicating results for depth-wise convolutional blocks AND for mobilenet blocks.
 
 `***` This parameter `r` is used for the `--reduction` flag with shuffle blocks.
 
