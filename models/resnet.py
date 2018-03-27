@@ -67,24 +67,25 @@ class MobileNetLikeBlock(nn.Module):
         super(MobileNetLikeBlock, self).__init__()
         # by default, increase in_planes and out_planes by 3x such that it 
         # matches with a 3x3 convolution with the same param size.
-        self.mult_ratio = 3. / reduction
-        self.in_planes = int(in_planes * self.mult_ratio)
-        self.out_planes = int(out_planes * self.mult_ratio)
+        self.expansion = 1. / float(reduction)
+        self.in_planes = in_planes
+        self.mid_planes = mid_planes = int(self.expansion * out_planes)
+        self.out_planes = out_planes
         
         self.depth1 = nn.Conv2d(
             in_planes, in_planes, kernel_size=3, padding=1, 
             stride=stride, bias=False, groups=in_planes)
         self.depth_bn1 = nn.BatchNorm2d(in_planes)
         
-        self.conv1 = nn.Conv2d(in_planes, out_planes, kernel_size=1, bias=False)
-        self.bn1 = nn.BatchNorm2d(out_planes)
+        self.conv1 = nn.Conv2d(in_planes, mid_planes, kernel_size=1, bias=False)
+        self.bn1 = nn.BatchNorm2d(mid_planes)
         
         self.depth2 = nn.Conv2d(
-            out_planes, out_planes, kernel_size=3, padding=1,
-            stride=1, bias=False, groups=out_planes)
-        self.depth_bn2 = nn.BatchNorm2d(out_planes)
+            mid_planes, mid_planes, kernel_size=3, padding=1,
+            stride=1, bias=False, groups=mid_planes)
+        self.depth_bn2 = nn.BatchNorm2d(mid_planes)
         
-        self.conv2 = nn.Conv2d(out_planes, out_planes, kernel_size=1, bias=False)
+        self.conv2 = nn.Conv2d(mid_planes, out_planes, kernel_size=1, bias=False)
         self.bn2 = nn.BatchNorm2d(out_planes)
     
     def flops(self):
