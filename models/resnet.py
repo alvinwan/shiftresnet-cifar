@@ -60,8 +60,11 @@ class ShiftConv(nn.Module):
         x += shortcut
         return x
 
+
 class MobileNetLikeBlock(nn.Module):
+
     def __init__(self, in_planes, out_planes, stride=1, reduction=1):
+        super(MobileNetLikeBlock, self).__init__()
         # by default, increase in_planes and out_planes by 3x such that it 
         # matches with a 3x3 convolution with the same param size.
         self.mult_ratio = 3. / reduction
@@ -78,7 +81,7 @@ class MobileNetLikeBlock(nn.Module):
         
         self.depth2 = nn.Conv2d(
             out_planes, out_planes, kernel_size=3, padding=1,
-            stride=1, bias=False, group=out_planes)
+            stride=1, bias=False, groups=out_planes)
         self.depth_bn2 = nn.BatchNorm2d(out_planes)
         
         self.conv2 = nn.Conv2d(out_planes, out_planes, kernel_size=1, bias=False)
@@ -102,7 +105,8 @@ class MobileNetLikeBlock(nn.Module):
         x = F.relu(self.bn2(self.conv2(x)))
         self.out_nchw = x.size()
         return x
-    
+
+
 class DepthWiseBlock(nn.Module):
 
     def __init__(self, in_planes, out_planes, stride=1, reduction=1):
@@ -304,6 +308,10 @@ def ResNetWrapper(num_blocks, reduction=1, reduction_mode='net', num_classes=10)
     elif reduction_mode == 'shuffle':
         block = lambda in_planes, planes, stride: \
             ShuffleBlock(in_planes, planes, stride, reduction=reduction)
+        return ResNet(block, num_blocks, num_classes=num_classes)
+    elif reduction_mode == 'mobile':
+        block = lambda in_planes, planes, stride: \
+            MobileNetLikeBlock(in_planes, planes, stride, reduction=reduction)
         return ResNet(block, num_blocks, num_classes=num_classes)
     return ResNet(BasicBlock, num_blocks, num_classes=num_classes, reduction=reduction)
 
