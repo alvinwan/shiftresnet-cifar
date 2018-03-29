@@ -12,7 +12,15 @@ import torchvision.transforms as transforms
 import os
 import argparse
 
-from models import *
+from models import ResNet20
+from models import ResNet56
+from models import ResNet110
+from models import ShiftResNet20
+from models import ShiftResNet56
+from models import ShiftResNet110
+from models import DepthwiseResNet20
+from models import DepthwiseResNet56
+from models import DepthwiseResNet110
 from utils import progress_bar
 from torch.autograd import Variable
 
@@ -20,12 +28,13 @@ from torch.autograd import Variable
 all_models = {
     'resnet20': ResNet20,
     'shiftresnet20': ShiftResNet20,
-    'resnet44': ResNet44,
-    'shiftresnet44': ShiftResNet44,
+    'depthwiseresnet20': DepthwiseResNet20,
     'resnet56': ResNet56,
     'shiftresnet56': ShiftResNet56,
+    'depthwiseresnet56': DepthwiseResNet56,
     'resnet110': ResNet110,
-    'shiftresnet110': ShiftResNet110
+    'shiftresnet110': ShiftResNet110,
+    'depthwiseresnet110': DepthwiseResNet110
 }
 
 parser = argparse.ArgumentParser(description='PyTorch CIFAR10 Training')
@@ -35,7 +44,7 @@ parser.add_argument('--batch_size', '-b', default=128, type=int, help='batch siz
 parser.add_argument('--arch', '-a', choices=all_models.keys(), default='shiftresnet110', help='neural network architecture')
 parser.add_argument('--expansion', '-e', help='Expansion for shift resnet.', default=1, type=float)
 parser.add_argument('--reduction', help='Amount to reduce raw resnet model by', default=1.0, type=float)
-parser.add_argument('--reduction-mode', choices=('block', 'net', 'depthwise', 'shuffle', 'mobile', 'depthwisewithskip'), help='"block" reduces inner representation for BasicBlock, "net" reduces for all layers', default='net')
+parser.add_argument('--reduction-mode', choices=('block', 'net', 'depthwise'), help='"block" reduces inner representation for BasicBlock, "net" reduces for all layers', default='net')
 parser.add_argument('--dataset', choices=('cifar10', 'cifar100', 'imagenet'), help='Dataset to train and validate on.', default='cifar10')
 parser.add_argument('--datadir', help='Folder containing data', default='./data/')
 args = parser.parse_args()
@@ -121,7 +130,7 @@ else:
     print('==> Building model..')
     cls = all_models[args.arch]
     assert 'shift' not in args.arch or args.reduction == 1, \
-        'Only default resnet supports reductions'
+        'Only default resnet and depthwise resnet support reductions'
     if args.reduction != 1:
         print('==> %s with reduction %.2f' % (args.arch, args.reduction))
         net = cls(reduction=args.reduction, reduction_mode=args.reduction_mode, num_classes=num_classes)
