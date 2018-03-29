@@ -2,6 +2,7 @@
 
 Train ResNet with shift operations on CIFAR10, CIFAR100 using PyTorch. This uses the [original resnet CIFAR10 codebase](https://github.com/kuangliu/pytorch-cifar.git) written by Kuang Liu. In this codebase, we replace 3x3 convolutional layers with a conv-shift-conv--a 1x1 convolutional layer, a set of shift operations, and a second 1x1 convolutional layer. The repository includes the following:
 
+- training utility to reproduce results
 - efficient implementation of the shift layer from [Peter Jin](https://people.eecs.berkeley.edu/~phj/)
 - ResNet and ShiftResNet derivatives on CIFAR10/CIFAR100
 - count utility for parameters and FLOPs
@@ -170,7 +171,7 @@ Accuracies below are all Top 1. All CIFAR-100 pretrained models can be found on 
 | ResNet110 | 1c | **68.01%** | 65.79% | 65.80% | 0.20 | 8.5 (7.8) | 1.1 | 0.37 |
 | ResNet110 | 3c | **72.10%** | 70.22% | 67.22% | 0.59 | 2.9 | 0.37 | 0.125 |
 | ResNet110 | 6c | **73.17%** | 72.21% | 68.11% | 1.18 | 1.5 | 0.19 | 0.065 |
-| ResNet110 | 9c | **73.71%** | 72.67% | ?? | 1.76 | 0.98 | 0.123 | 0.04 |
+| ResNet110 | 9c | **73.71%** | 72.67% | 68.39% | 1.76 | 0.98 | 0.123 | 0.04 |
 | ResNet110 | -- | -- | 72.11% | -- | 1.73 | 1.0 | -- | -- |
 
 `*` `SRN` ShiftResNet and `RN` ResNet accuracy using convolutional layers (by reducing the number of channels in the intermediate representation of each ResNet block) and using depth-wise convolutional layers (again reducing number of channels in intermediate representation)
