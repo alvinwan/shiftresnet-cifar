@@ -58,9 +58,10 @@ class ShiftConv(nn.Module):
         shortcut = self.shortcut(x)
         x = F.relu(self.bn1(self.conv1(x)))
         self.int_nchw = x.size()
-        x = F.relu(self.bn2(self.conv2(self.shift2(x))))
+        x = self.bn2(self.conv2(self.shift2(x)))
         self.out_nchw = x.size()
         x += shortcut
+        x = F.relu(x)
         return x
 
 
