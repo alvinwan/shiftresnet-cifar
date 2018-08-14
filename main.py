@@ -50,7 +50,7 @@ parser.add_argument('--datadir', help='Folder containing data', default='./data/
 args = parser.parse_args()
 
 use_cuda = torch.cuda.is_available()
-best_acc = 0  # best test accuracy
+best_acc = 0.0  # best test accuracy
 start_epoch = 0  # start from epoch 0 or last checkpoint epoch
 
 # Data
@@ -124,7 +124,7 @@ if args.resume:
     assert os.path.isdir('checkpoint'), 'Error: no checkpoint directory found!'
     checkpoint = torch.load(path)
     net = checkpoint['net']
-    best_acc = checkpoint['acc']
+    best_acc = float(checkpoint['acc'])
     start_epoch = checkpoint['epoch']
 else:
     print('==> Building model..')
@@ -178,7 +178,7 @@ def train(epoch):
         correct += predicted.eq(targets.data).cpu().sum()
 
         progress_bar(batch_idx, len(trainloader), 'Loss: %.3f | Acc: %.3f%% (%d/%d)'
-            % (train_loss/(batch_idx+1), 100.*correct/total, correct, total))
+            % (train_loss/(batch_idx+1), 100.*float(correct)/float(total), correct, total))
 
 def test(epoch):
     global best_acc
@@ -199,14 +199,14 @@ def test(epoch):
         correct += predicted.eq(targets.data).cpu().sum()
 
         progress_bar(batch_idx, len(testloader), 'Loss: %.3f | Acc: %.3f%% (%d/%d)'
-            % (test_loss/(batch_idx+1), 100.*correct/total, correct, total))
+            % (test_loss/(batch_idx+1), 100.*float(correct)/float(total), correct, total))
 
     # Save checkpoint.
-    acc = 100.*correct/total
+    acc = 100.*float(correct)/float(total)
     if acc > best_acc:
         print('Saving..')
         state = {
-            'net': net.module if use_cuda else net,
+            'net': net.module if use_cuda and torch.cuda.device_count()>1 else net,
             'acc': acc,
             'epoch': epoch,
         }
