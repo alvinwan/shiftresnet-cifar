@@ -82,7 +82,7 @@ class ResNet(nn.Module):
         for mod in (self.layer1, self.layer2, self.layer3):
             for layer in mod:
                 flops += layer.flops()
-        return int_h*int_w*9*self.in_planes + out_w*self.num_classes + flops
+        return int_h*int_w*9*self.in_planes*3 + out_w*self.num_classes + flops
 
     def forward(self, x):
         out = F.relu(self.bn1(self.conv1(x)))
