@@ -42,8 +42,7 @@ Your prompt should now be prefaced with `(shift)`, as in
 2. Install `pytorch` and `torchvision`. Access [pytorch.org](http://pytorch.org), scroll down to the "Getting Started" section, and select the appropriate OS, package manager, Python, and CUDA build. For example, selecting Linux, pip, Python2.7, and CUDA 8 gives the following, as of the time of this writing
 
 ```
-pip install http://download.pytorch.org/whl/cu80/torch-0.3.0.post4-cp27-cp27mu-linux_x86_64.whl 
-pip install torchvision 
+pip install pytorch torchvision # upgrade to latest PyTorch 0.4.1 official stable version
 ```
 
 3. Clone the repository
