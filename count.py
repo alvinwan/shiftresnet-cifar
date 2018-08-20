@@ -1,7 +1,5 @@
 from models import ResNet20
 from models import ShiftResNet20
-from models import ResNet44
-from models import ShiftResNet44
 from models import ResNet56
 from models import ShiftResNet56
 from models import ResNet110
@@ -14,8 +12,6 @@ import argparse
 all_models = {
     'resnet20': ResNet20,
     'shiftresnet20': ShiftResNet20,
-    'resnet44': ResNet44,
-    'shiftresnet44': ShiftResNet44,
     'resnet56': ResNet56,
     'shiftresnet56': ShiftResNet56,
     'resnet110': ResNet110,

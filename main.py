@@ -148,7 +148,7 @@ criterion = nn.CrossEntropyLoss()
 def adjust_learning_rate(epoch, lr):
     if epoch <= 81:  # 32k iterations
       return lr
-    elif epoch <= 123:  # 48k iterations
+    elif epoch <= 122:  # 48k iterations
       return lr/10
     else:
       return lr/100
@@ -172,13 +172,13 @@ def train(epoch):
         loss.backward()
         optimizer.step()
 
-        train_loss += loss.data[0]
+        train_loss += loss.item() * targets.size(0)
         _, predicted = torch.max(outputs.data, 1)
         total += targets.size(0)
         correct += predicted.eq(targets.data).cpu().sum()
 
         progress_bar(batch_idx, len(trainloader), 'Loss: %.3f | Acc: %.3f%% (%d/%d)'
-            % (train_loss/(batch_idx+1), 100.*float(correct)/float(total), correct, total))
+            % (train_loss/total, 100.*float(correct)/float(total), correct, total))
 
 def test(epoch):
     global best_acc
@@ -187,26 +187,27 @@ def test(epoch):
     correct = 0
     total = 0
     for batch_idx, (inputs, targets) in enumerate(testloader):
-        if use_cuda:
-            inputs, targets = inputs.cuda(), targets.cuda()
-        inputs, targets = Variable(inputs, volatile=True), Variable(targets)
-        outputs = net(inputs)
-        loss = criterion(outputs, targets)
+        with torch.no_grad():
+            if use_cuda:
+                inputs, targets = inputs.cuda(), targets.cuda()
+            inputs, targets = Variable(inputs), Variable(targets)
+            outputs = net(inputs)
+            loss = criterion(outputs, targets)
 
-        test_loss += loss.data[0]
-        _, predicted = torch.max(outputs.data, 1)
-        total += targets.size(0)
-        correct += predicted.eq(targets.data).cpu().sum()
+            test_loss += loss.item() * targets.size(0)
+            _, predicted = torch.max(outputs.data, 1)
+            total += targets.size(0)
+            correct += predicted.eq(targets.data).cpu().sum()
 
         progress_bar(batch_idx, len(testloader), 'Loss: %.3f | Acc: %.3f%% (%d/%d)'
-            % (test_loss/(batch_idx+1), 100.*float(correct)/float(total), correct, total))
+            % (test_loss/total, 100.*float(correct)/float(total), correct, total))
 
     # Save checkpoint.
     acc = 100.*float(correct)/float(total)
     if acc > best_acc:
         print('Saving..')
         state = {
-            'net': net.module if use_cuda and torch.cuda.device_count()>1 else net,
+            'net': net.module if use_cuda else net,
             'acc': acc,
             'epoch': epoch,
         }
@@ -217,6 +218,6 @@ def test(epoch):
         best_acc = acc
 
 
-for epoch in range(start_epoch, 160):
+for epoch in range(start_epoch, 164):
     train(epoch)
     test(epoch)
