@@ -153,7 +153,7 @@ Below, we run experiments on the following:
 
 ### CIFAR-100 Accuracy
 
-Accuracies below are all Top 1. All CIFAR-100 pretrained models can be found on [Google Drive](https://drive.google.com/drive/u/1/folders/1unOPMsQDagcDa8gI5kFvQ0VH84N7h1V2) (It's worth noticing that this pre-trained model is encoded in the python2 way which may cause problems when the model is loaded in a python3 program.). Below, we compare reductions in parameters for the entire net (`--reduction_mode=net`) and block-wise (`--reduction_mode=block`)
+Accuracies below are all Top 1. All CIFAR-100 pretrained models can be found on [Google Drive](https://drive.google.com/open?id=1zjAfTdMlN_EeWxUFD7VSDOak8S1ebzo9) (It's worth noticing that this pre-trained model is encoded in the python2 way which may cause problems when the model is loaded in a python3 program.). Below, we compare reductions in parameters for the entire net (`--reduction_mode=net`) and block-wise (`--reduction_mode=block`)
 
 | Model | `e` | SRN Acc* | RN Conv Acc | RN Depth Acc | Params | Reduction (conv) | `r`** | `r`*** |
 |-------|-----|----------|-------------|--------------|--------|------------------|-------|--------|
