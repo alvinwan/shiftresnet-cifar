@@ -7,7 +7,7 @@ Train ResNet with shift operations on CIFAR10, CIFAR100 using PyTorch. This uses
 - ResNet and ShiftResNet derivatives on CIFAR10/CIFAR100
 - count utility for parameters and FLOPs
 - evaluation script for offline evaluation
-- links to 60+ pretrained models: [CIFAR10 models](https://drive.google.com/open?id=1aszFPLvEDcJsNRBwz-J5eI5VN6Cyc3pP), [CIFAR100 models](https://drive.google.com/open?id=1zjAfTdMlN_EeWxUFD7VSDOak8S1ebzo9)
+- links to 60+ pretrained models: [#12](https://github.com/alvinwan/shiftresnet-cifar/issues/12) for CIFAR-10 and CIFAR-100
 
 Unless otherwise specified, the code was written by and experiments were run by [Alvin Wan](http://alvinwan.com) with help from [Bichen Wu](https://github.com/BichenWuUCB).
 
@@ -76,7 +76,7 @@ cd ../..
 mkdir checkpoint
 ```
 
-In this example below, we download the original `ResNet20`, 3x smaller `ShiftResNet20-3`, and 3x smaller `ResNet20`. Download [all CIFAR-100 models](https://drive.google.com/open?id=1zjAfTdMlN_EeWxUFD7VSDOak8S1ebzo9). Save these in a `checkpoint` directory, so that your file structure resembles the following:
+In this example below, we download the original `ResNet20`, 3x smaller `ShiftResNet20-3`, and 3x smaller `ResNet20`. Download [all CIFAR-100 models](https://github.com/alvinwan/shiftresnet-cifar/issues/12). Save these in a `checkpoint` directory, so that your file structure resembles the following:
 
 ```
 shiftresnet-cifar/
@@ -153,7 +153,7 @@ Below, we run experiments on the following:
 
 ### CIFAR-100 Accuracy
 
-Accuracies below are all Top 1. All CIFAR-100 pretrained models can be found on [Google Drive](https://drive.google.com/open?id=1zjAfTdMlN_EeWxUFD7VSDOak8S1ebzo9) (It's worth noticing that this pre-trained model is encoded in the python2 way which may cause problems when the model is loaded in a python3 program.). Below, we compare reductions in parameters for the entire net (`--reduction_mode=net`) and block-wise (`--reduction_mode=block`)
+Accuracies below are all Top 1. All CIFAR-100 pretrained models can be found [here](https://github.com/alvinwan/shiftresnet-cifar/issues/12) (It's worth noticing that this pre-trained model is encoded in the python2 way which may cause problems when the model is loaded in a python3 program.). Below, we compare reductions in parameters for the entire net (`--reduction_mode=net`) and block-wise (`--reduction_mode=block`)
 
 | Model | `e` | SRN Acc* | RN Conv Acc | RN Depth Acc | Params | Reduction (conv) | `r`** | `r`*** |
 |-------|-----|----------|-------------|--------------|--------|------------------|-------|--------|
@@ -181,7 +181,7 @@ Accuracies below are all Top 1. All CIFAR-100 pretrained models can be found on 
 
 ### CIFAR-10 Accuracy
 
-All CIFAR-10 pretrained models can be found on [Google Drive](https://drive.google.com/open?id=1aszFPLvEDcJsNRBwz-J5eI5VN6Cyc3pP) (Same as above, the encoding is in python2 way which is different from python3's encoding).
+All CIFAR-10 pretrained models can be found on [here](https://github.com/alvinwan/shiftresnet-cifar/issues/12) (Same as above, the encoding is in python2 way which is different from python3's encoding).
 
 | Model | `e` | ShiftResNet Acc | ResNet Acc | Params* | Reduction** |
 |-------|-----|-----|-----------|---------|-------------|
